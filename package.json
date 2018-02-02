@@ -1,0 +1,46 @@
+{
+  "name": "eliminatus",
+  "version": "0.0.1",
+  "description": "A multiplayer web-based rts game.",
+  "main": "app/index.js",
+  "scripts": {
+    "clean": "rm -rf .cache && rm -rf dist",
+    "dev": "npm run clean && parcel app/index.html -d dist",
+    "build": "npm run clean && parcel build app/index.html --public-url ./ && mv dist/countey.html dist/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HelloWorld017/eliminatus.git"
+  },
+  "keywords": [
+    "game",
+    "3d",
+    "three",
+    "web",
+    "rts"
+  ],
+  "author": "Khinenw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HelloWorld017/eliminatus/issues"
+  },
+  "homepage": "https://github.com/HelloWorld017/eliminatus#readme",
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "deep-extend": "^0.5.0",
+    "three": "^0.89.0",
+    "vue": "^2.5.13",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "parcel-bundler": "^1.5.1",
+    "parcel-plugin-vue": "^1.5.0",
+    "postcss": "^6.0.16",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-import": "^11.0.0",
+    "vue-template-compiler": "^2.5.13"
+  }
+}
