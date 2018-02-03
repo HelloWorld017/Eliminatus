@@ -2,26 +2,17 @@ import EntityPlayer from "./entity/EntityPlayer";
 import KeyboardInput from "./middlewares/KeyboardInput";
 import MouseInput from "./middlewares/MouseInput";
 import MouseMovement from "./middlewares/MouseMovement";
-import Vuex from 'vuex';
 import World from "./world/World";
 
 class Eliminatus {
-	constructor() {
+	constructor(store) {
 		this.world = new World(this);
 		this.middlewares = [
 			new MouseInput().handler,
 			new KeyboardInput().handler,
 			MouseMovement
 		];
-		this.store = new Vuex.Store({
-			state: {
-				health: 10,
-				maxHealth: 10,
-				buildMode: false,
-				buildingObject: undefined,
-				followCamera: false
-			}
-		});
+		this.store = store;
 
 		this.updateBound = this.update.bind(this);
 		this.renderTickBound = this.renderTick.bind(this);

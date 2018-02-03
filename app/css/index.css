@@ -1,6 +1,9 @@
+@import "mdi/css/materialdesignicons.css";
+
 body, html {
 	margin: 0;
 	padding: 0;
+	background: #f1f2f3;
 }
 
 #game {
@@ -15,4 +18,53 @@ body, html {
 	height: 100vh;
 	display: block;
 	pointer-events: none;
+}
+
+::-webkit-scrollbar {
+	width: 16px;
+	height: 16px;
+}
+
+::-webkit-scrollbar-button {
+	width: 0px;
+	height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #03a9f4;
+	border: none;
+	border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #29b6f6;
+}
+
+::-webkit-scrollbar-thumb:active {
+	background: #039be5;
+}
+
+::-webkit-scrollbar-track {
+	background: #f1f2f3;
+	border: none;
+	border-radius: 0px;
+}
+
+::-webkit-scrollbar-track:active {
+	background: #c0c0c0;
+}
+
+::-webkit-scrollbar-corner {
+	background: #f1f2f3;
+}
+
+* {
+	scrollbar-arrow-color: #03a9f4;
+	scrollbar-base-color: #f1f2f3;
+	scrollbar-track-color: #f1f2f3;
+	scrollbar-face-color: #03a9f4;
+	scrollbar-highlight-color: #f1f2f3;
+	scrollbar-3dlight-color: #f1f2f3;
+	scrollbar-darkshadow-color: #f1f2f3;
+	scrollbar-shadow-color: #03a9f4;
 }
