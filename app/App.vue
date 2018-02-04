@@ -7,6 +7,20 @@
 	</section>
 </template>
 
+<style lang="less" scoped>
+	.fade-enter-active, .fade-leave-active {
+		transition: all .5s ease;
+	}
+
+	.fade-enter {
+		opacity: 0;
+	}
+
+	.fade-leave-to {
+		opacity: 0;
+	}
+</style>
+
 <script>
 	import ElHud from "./components/ElHud.vue";
 	import ElWaitings from "./components/ElWaitings.vue";

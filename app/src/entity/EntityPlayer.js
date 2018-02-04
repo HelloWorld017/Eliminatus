@@ -147,6 +147,13 @@ class EntityPlayer extends Entity {
 		}
 
 		if(this.followCamera) this.lookPlayer();
+
+		this.game.announce('game.player.move', {
+			x: this.model.position.x,
+			y: this.model.position.y,
+			z: this.model.position.z,
+			rotation: this.model.rotation.y
+		});
 	}
 
 	static async registerModel(loader) {

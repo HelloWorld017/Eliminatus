@@ -1,4 +1,4 @@
-@import "mdi/css/materialdesignicons.css";
+@import "~mdi/css/materialdesignicons.css";
 
 body, html {
 	margin: 0;

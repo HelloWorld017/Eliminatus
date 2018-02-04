@@ -14,6 +14,7 @@
 	.el-party {
 		max-width: 768px;
 		margin: 0 auto;
+		margin-bottom: 25px;
 		display: flex;
 		box-shadow: 0 2px 9px 2px rgba(0, 0, 0, .3);
 		color: #404040;
@@ -61,7 +62,6 @@
 	export default {
 		methods: {
 			join() {
-				eliminatus.socket.emit('match.join', this.party.id);
 				this.$emit('join', this.party.id);
 			}
 		},
@@ -76,8 +76,8 @@
 			},
 
 			progClass() {
-				if(this.ratio < 40) return 'low';
-				if(this.ratio < 75) return 'middle';
+				if(this.ratio < .4) return 'low';
+				if(this.ratio < .75) return 'middle';
 				return 'high';
 			}
 		},

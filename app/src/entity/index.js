@@ -1,7 +1,11 @@
 import EntityPlayer from "./EntityPlayer";
+import EntityPeerPlayer from "./EntityPeerPlayer";
 
 export default async function loadEntity(modelLoader) {
-	const entities = [EntityPlayer];
+	const entities = [
+		EntityPlayer,
+		EntityPeerPlayer
+	];
 	const entitiesByType = {};
 
 	for(const entity of entities) {

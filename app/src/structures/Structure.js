@@ -10,6 +10,8 @@ class Structure {
 		this.model.position.x = x;
 		this.model.position.y = y;
 		this.model.position.z = z;
+
+		this.health = 300;
 	}
 
 	getGridPosition() {

@@ -64,7 +64,7 @@ class Renderer {
 	bind(model) {
 		this.playerModel = model;
 
-		this.camera.position.set(0, 200, -100);
+		this.camera.position.set(model.position.x + 0, model.position.y + 200, model.position.z + -100);
 		this.camera.lookAt(this.playerModel.position);
 	}
 

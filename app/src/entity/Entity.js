@@ -8,6 +8,8 @@ class Entity {
 		this.model.position.x = x;
 		this.model.position.y = y;
 		this.model.position.z = z;
+
+		this.health = 50;
 	}
 
 	render() {
@@ -20,6 +22,10 @@ class Entity {
 
 	static async registerModel() {
 
+	}
+
+	importFromTag(tags) {
+		
 	}
 }
 
