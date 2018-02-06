@@ -74,6 +74,7 @@ class Eliminatus {
 	createStructureFromData(str) {
 		const structureClass = this.world.structureByType[str.type];
 		const structureObject = new structureClass(this.world, str.x, 0, str.y);
+		structureObject.model.rotation.y = str.rotation;
 		structureObject.health = str.health;
 
 		return structureObject;
@@ -130,6 +131,10 @@ class Eliminatus {
 		});
 
 		this.socket.on('entity.attribute', v => this.updateEntityAttributeByEID(v, true));
+		this.socket.on('structure.spawn', obj => {
+			const structureObject = this.createStructureFromData(obj);
+			this.world.addStructure(structureObject);
+		});
 	}
 }
 

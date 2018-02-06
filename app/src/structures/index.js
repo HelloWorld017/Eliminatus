@@ -5,6 +5,7 @@ import StructureOre from "./StructureOre";
 import StructureRock from "./StructureRock";
 import StructureStone from "./StructureStone";
 import StructureTree from "./StructureTree";
+import StructureTurret from "./StructureTurret";
 
 export default async function loadStructures(modelLoader) {
 	const structures = [
@@ -14,7 +15,8 @@ export default async function loadStructures(modelLoader) {
 		StructureOre,
 		StructureRock,
 		StructureStone,
-		StructureTree
+		StructureTree,
+		StructureTurret
 	];
 	const structuresByType = {};
 

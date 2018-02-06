@@ -12,7 +12,7 @@ class ModelLoader {
 		return this.models[name].clone();
 	}
 
-	async load(name, objPath, mtlPath, pngPath) {
+	async load(name, objPath, mtlPath, pngPath, translateMap={x: 0, y: 0}) {
 		const mtlLoader = new MTLLoader();
 		mtlLoader.setTexturePath(pngPath + '#'); // Remove path of mtl, use only pngPath
 		const material = await loadPromise(mtlLoader, mtlPath);
@@ -26,6 +26,8 @@ class ModelLoader {
 
 		model.children[0].material.normalMap = texture;
 		model.children[0].material.ambient = new Color(0xffffff);
+		model.children[0].geometry.translate(-translateMap.x, 0, -translateMap.y);
+		model.children[0].geometry.computeBoundingBox();
 		model.children[0].geometry.computeVertexNormals(true);
 		model.children[0].geometry.computeFaceNormals(true);
 		model.children[0].geometry.computeVertexNormals(true);

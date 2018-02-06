@@ -9,7 +9,7 @@ class StructureBarrel extends Structure{
 	}
 
 	static async registerModel(loader) {
-		return loader.load(StructureBarrel.type, BarrelModel, BarrelMaterial, BarrelTexture);
+		return loader.load(StructureBarrel.type, BarrelModel, BarrelMaterial, BarrelTexture, {x: 20, y: 20});
 	}
 }
 

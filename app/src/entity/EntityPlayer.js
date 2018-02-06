@@ -2,7 +2,7 @@ import Entity from "./Entity";
 import PlayerModel from "../../models/entities/player.obj";
 import PlayerMaterial from "../../models/entities/player.mtl";
 import PlayerTexture from "../../models/entities/player.png";
-import {Raycaster, Vector2, Vector3} from "three";
+import {GridHelper, Raycaster, Vector2, Vector3} from "three";
 import TempModel from "../utils/TempModel";
 
 const ENTITY_TYPE = "player";
@@ -24,15 +24,25 @@ class EntityPlayer extends Entity {
 
 		this.keyMap = new Map([
 			['tab', () => this.toggleFollowCamera()],
-			['`', () => this.cancelBuilding()]
+			['`', () => this.cancelBuilding()],
+			['r', () => this.buildRotation = (this.buildRotation - Math.PI / 2) % (Math.PI * 2)]
 		]);
 
 		this._followCamera = false;
 		this.raycaster = new Raycaster;
 		this.mouse = new Vector2;
 		this.buildPoint = new Vector3;
+		this.buildRotation = 0;
 		this.tempModel = undefined;
 		this.tempModelLoader = new TempModel(this.world.modelLoader);
+		/*
+		this.buildGrid = new GridHelper(8000, 200);
+		this.buildGrid.position.x = 4000;
+		this.buildGrid.position.z = 4000;
+		this.world.renderer.scene.add(this.buildGrid);
+		*/
+
+		this.inventory = {};
 	}
 
 	get followCamera() {
@@ -69,8 +79,15 @@ class EntityPlayer extends Entity {
 		if(!this.buildMode) return;
 		const structure = this.world.structureByType[this.buildMode];
 
-		const buildTarget = new structure(this.world, this.buildPoint.x, 0, this.buildPoint.z);
-		this.world.addStructure(buildTarget);
+		if(!structure.canBuiltOn(this.world, this.buildPoint.x, 0, this.buildPoint.z, this.buildRotation))
+		return;
+
+		this.game.socket.emit('game.structure.build', {
+			type: this.buildMode,
+			x: this.buildPoint.x,
+			y: this.buildPoint.z,
+			rotation: this.buildRotation
+		});
 		this.cancelBuilding();
 	}
 
@@ -140,9 +157,23 @@ class EntityPlayer extends Entity {
 				}
 
 				point.x = Math.round(point.x / 40) * 40;
+				point.y = 0;
 				point.z = Math.round(point.z / 40) * 40;
 				this.buildPoint = point;
 				this.tempModel.position.copy(point);
+				this.tempModel.rotation.y = this.buildRotation;
+
+				if(!this.world.structureByType[this.buildMode].canBuiltOn(
+					this.world,
+					point.x,
+					0,
+					point.z,
+					this.buildRotation
+				)) {
+					this.tempModel.material.color.setHex(0xff5722);
+				} else {
+					this.tempModel.material.color.setHex(0x03a9f4);
+				}
 			}
 		}
 

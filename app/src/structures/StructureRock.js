@@ -9,7 +9,7 @@ class StructureRock extends Structure{
 	}
 
 	static async registerModel(loader) {
-		return loader.load(StructureRock.type, RockModel, RockMaterial, RockTexture);
+		return loader.load(StructureRock.type, RockModel, RockMaterial, RockTexture, {x: 20, y: 20});
 	}
 }
 

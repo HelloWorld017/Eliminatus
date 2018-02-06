@@ -15,9 +15,9 @@ class Structure {
 	}
 
 	getGridPosition() {
-		return [new Vector2(
-			Math.floor(this.model.position.x / 40), Math.floor(this.model.position.y / 40)
-		)];
+		return this.constructor.getGridPositionByAttr(
+			this.model.position.x, 0, this.model.position.z, this.model.rotation.y
+		);
 	}
 
 	activateMenu() {
@@ -28,8 +28,14 @@ class Structure {
 
 	}
 
-	static async canBuiltOn() {
+	static getGridPositionByAttr(x, y, z, rotation) {
+		return [new Vector2(Math.floor(x / 40), Math.floor(z / 40))];
+	}
 
+	static canBuiltOn(world, x, y, z, rotation) {
+		return this.getGridPositionByAttr(x, y, z, rotation).every((v) => {
+			return !world.structures[world.getPositionTag(v)];
+		});
 	}
 
 	static get width() {

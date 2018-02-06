@@ -9,7 +9,7 @@ class StructureTree extends Structure{
 	}
 
 	static async registerModel(loader) {
-		return loader.load(StructureTree.type, TreeModel, TreeMaterial, TreeTexture);
+		return loader.load(StructureTree.type, TreeModel, TreeMaterial, TreeTexture, {x: 20, y: 20});
 	}
 }
 
