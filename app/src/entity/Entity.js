@@ -10,14 +10,22 @@ class Entity {
 		this.model.position.z = z;
 
 		this.health = 50;
+		this.animation = [];
 	}
 
 	render() {
 
 	}
 
-	update(ctx) {
+	attachAnimation(animation) {
+		this.animation.push(animation);
+		animation.onAttach(this);
+	}
 
+	update(ctx) {
+		this.animation = this.animation.filter(v => {
+			return v.update(this, ctx);
+		});
 	}
 
 	static async registerModel() {
@@ -25,7 +33,7 @@ class Entity {
 	}
 
 	importFromTag(tags) {
-		
+
 	}
 }
 

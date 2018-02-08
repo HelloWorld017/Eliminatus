@@ -7,21 +7,58 @@ class Structure {
 		this.game = world.game;
 
 		this.model = world.modelLoader.get(structName);
-		this.model.position.x = x;
-		this.model.position.y = y;
-		this.model.position.z = z;
 
 		this.health = 300;
+
+		['x', 'y', 'z'].forEach(key => {
+			Object.defineProperty(this, key, {
+				get: () => {
+					return this.model.position[key] + this.boundMap[key];
+				},
+
+				set: (value) => {
+					this.model.position[key] = value - this.boundMap[key];
+				}
+			})
+		});
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	getGridPosition() {
 		return this.constructor.getGridPositionByAttr(
-			this.model.position.x, 0, this.model.position.z, this.model.rotation.y
+			this.x, 0, this.z, this.model.rotation.y
 		);
+	}
+
+	static get positioningMethod() {
+		return Math.ceil;
+	}
+
+	set rotation(rot) {
+		const x = this.x;
+		const y = this.y;
+		const z = this.z;
+
+		this.model.rotation.y = rot;
+
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	get rotation() {
+		return this.model.rotation.y;
 	}
 
 	activateMenu() {
 
+	}
+
+	get boundMap() {
+		return this.constructor.getBoundMap(this.rotation);
 	}
 
 	static async registerModel() {
@@ -44,6 +81,10 @@ class Structure {
 
 	static get height() {
 		return 1;
+	}
+
+	static getBoundMap(rot) {
+		return {x: 20, y: 0, z: 20};
 	}
 }
 

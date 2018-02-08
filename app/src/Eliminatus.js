@@ -74,7 +74,7 @@ class Eliminatus {
 	createStructureFromData(str) {
 		const structureClass = this.world.structureByType[str.type];
 		const structureObject = new structureClass(this.world, str.x, 0, str.y);
-		structureObject.model.rotation.y = str.rotation;
+		structureObject.rotation = str.rotation;
 		structureObject.health = str.health;
 
 		return structureObject;

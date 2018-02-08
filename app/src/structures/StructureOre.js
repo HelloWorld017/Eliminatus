@@ -9,7 +9,7 @@ class StructureOre extends Structure{
 	}
 
 	static async registerModel(loader) {
-		return loader.load(StructureOre.type, OreModel, OreMaterial, OreTexture, {x: 20, y: 20});
+		return loader.load(StructureOre.type, OreModel, OreMaterial, OreTexture);
 	}
 }
 

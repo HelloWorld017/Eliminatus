@@ -10,6 +10,14 @@ class StructureHeadquater extends Structure{
 		super(StructureHeadquater.type, world, x, y, z);
 	}
 
+	static getBoundMap(rot) {
+		return {x: 0, y: 0, z: 0};
+	}
+
+	static get positioningMethod() {
+		return Math.round;
+	}
+
 	static async registerModel(loader) {
 		return loader.load(StructureHeadquater.type, HqModel, HqMaterial, HqTexture);
 	}

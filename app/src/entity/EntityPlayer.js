@@ -2,10 +2,11 @@ import Entity from "./Entity";
 import PlayerModel from "../../models/entities/player.obj";
 import PlayerMaterial from "../../models/entities/player.mtl";
 import PlayerTexture from "../../models/entities/player.png";
-import {GridHelper, Raycaster, Vector2, Vector3} from "three";
+import {Raycaster, Vector2, Vector3} from "three";
 import TempModel from "../utils/TempModel";
 
 const ENTITY_TYPE = "player";
+const modulo = (n, n2) => ((n % n2) + n2) % n2;
 
 class EntityPlayer extends Entity {
 	constructor(world, x, y, z) {
@@ -19,13 +20,14 @@ class EntityPlayer extends Entity {
 			['4', 'repair_core'],
 			['5', 'turret'],
 			['6', 'wall'],
-			['7', 'wall_rot']
+			['7', 'wall_rot'],
+			['8', 'tree']
 		]);
 
 		this.keyMap = new Map([
 			['tab', () => this.toggleFollowCamera()],
 			['`', () => this.cancelBuilding()],
-			['r', () => this.buildRotation = (this.buildRotation - Math.PI / 2) % (Math.PI * 2)]
+			['r', () => this.buildRotation = modulo(this.buildRotation - Math.PI / 2, Math.PI * 2)]
 		]);
 
 		this._followCamera = false;
@@ -35,12 +37,6 @@ class EntityPlayer extends Entity {
 		this.buildRotation = 0;
 		this.tempModel = undefined;
 		this.tempModelLoader = new TempModel(this.world.modelLoader);
-		/*
-		this.buildGrid = new GridHelper(8000, 200);
-		this.buildGrid.position.x = 4000;
-		this.buildGrid.position.z = 4000;
-		this.world.renderer.scene.add(this.buildGrid);
-		*/
 
 		this.inventory = {};
 	}
@@ -92,6 +88,8 @@ class EntityPlayer extends Entity {
 	}
 
 	update(ctx) {
+		super.update(ctx);
+
 		if(ctx.keyboard.pressingKeys.get('a')) {
 			this.model.rotation.y += Math.PI / 60;
 		} else if(ctx.keyboard.pressingKeys.get('d')) {
@@ -150,17 +148,23 @@ class EntityPlayer extends Entity {
 			if(intersects.length > 0) {
 				const point = intersects.pop().point;
 				const myModel = this.model.position;
+
 				if(Math.hypot(point.x - myModel.x, point.z - myModel.z) > 100) {
-					const theta = Math.atan2(point.z - myModel.z, point. x - myModel.x);
+					const theta = Math.atan2(point.z - myModel.z, point.x - myModel.x);
 					point.x = myModel.x + Math.cos(theta) * 100;
 					point.z = myModel.z + Math.sin(theta) * 100;
 				}
 
-				point.x = Math.round(point.x / 40) * 40;
+				const boundMap = this.world.structureByType[this.buildMode].getBoundMap(this.buildRotation);
+				const gridifyFunction = this.world.structureByType[this.buildMode].positioningMethod;
+				point.x = gridifyFunction(point.x / 40) * 40;
 				point.y = 0;
-				point.z = Math.round(point.z / 40) * 40;
+				point.z = gridifyFunction(point.z / 40) * 40;
+
 				this.buildPoint = point;
-				this.tempModel.position.copy(point);
+				this.tempModel.position.x = point.x - boundMap.x;
+				this.tempModel.position.y = point.y - boundMap.y;
+				this.tempModel.position.z = point.z - boundMap.z;
 				this.tempModel.rotation.y = this.buildRotation;
 
 				if(!this.world.structureByType[this.buildMode].canBuiltOn(

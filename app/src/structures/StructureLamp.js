@@ -9,7 +9,7 @@ class StructureLamp extends Structure{
 	}
 
 	static async registerModel(loader) {
-		return loader.load(StructureLamp.type, LampModel, LampMaterial, LampTexture, {x: 20, y: 20});
+		return loader.load(StructureLamp.type, LampModel, LampMaterial, LampTexture);
 	}
 }
 
