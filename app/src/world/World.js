@@ -1,6 +1,6 @@
 import deepExtend from "deep-extend";
 import ModelLoader from "../utils/ModelLoader";
-import Particle from "../animation/Particle";
+import ParticleTextures from "../animation/ParticleTextures";
 import Renderer from "../graphics/Renderer";
 
 import animations from "../animation";
@@ -40,7 +40,7 @@ class World {
 		this.entitiesByType = await loadEntity(this.modelLoader);
 		this.structureByType = await loadStructures(this.modelLoader);
 		this.animationsByType = animations;
-		await Particle.init();
+		await ParticleTextures.init();
 	}
 
 	spawnEntity(eid, entity) {

@@ -4,7 +4,7 @@ import Tween from "../animation/Tween";
 class CameraMovement {
 	constructor() {
 		this.gridStatus = false;
-		this.rotation = Math.PI / 2;
+		this.rotation = 90;
 		this.rotationTween = new Tween(this.rotation);
 
 		this.handler = this._handler.bind(this);
@@ -28,8 +28,8 @@ class CameraMovement {
 	}
 
 	resetCamera() {
-		this.camera.position.x = this.originalPos.x - Math.cos(this.rotation) * this.cameraDistance;
-		this.camera.position.z = this.originalPos.z - Math.sin(this.rotation) * this.cameraDistance;
+		this.camera.position.x = this.originalPos.x - this.cos * this.cameraDistance;
+		this.camera.position.z = this.originalPos.z - this.sin * this.cameraDistance;
 
 		this.camera.lookAt(this.originalPos.x, 0, this.originalPos.z);
 	}
@@ -45,8 +45,8 @@ class CameraMovement {
 	}
 
 	lookPlayer() {
-		this.x = this.entity.position.x - Math.cos(this.rotation) * this.cameraDistance,
-		this.z = this.entity.position.z - Math.sin(this.rotation) * this.cameraDistance
+		this.x = this.entity.position.x - this.cos * this.cameraDistance,
+		this.z = this.entity.position.z - this.sin * this.cameraDistance
 	}
 
 	toggleFollowCamera() {
@@ -92,8 +92,8 @@ class CameraMovement {
 			if(v.type !== 'keyboard:keydown') return;
 
 			switch(v.key) {
-				case 'e': this.rotationTween.setTargetValue(this.rotation + Math.PI / 4); break;
-				case 'q': this.rotationTween.setTargetValue(this.rotation - Math.PI / 4); break;
+				case 'e': this.rotationTween.setTargetValue(this.rotationTween.target + 45); break;
+				case 'q': this.rotationTween.setTargetValue(this.rotationTween.target - 45); break;
 				case 'tab': this.toggleFollowCamera(); break;
 			}
 		});
@@ -120,8 +120,8 @@ class CameraMovement {
 
 	get originalPos() {
 		return {
-			x: this.camera.position.x + Math.cos(this.rotation) * this.cameraDistance,
-			z: this.camera.position.z + Math.sin(this.rotation) * this.cameraDistance
+			x: this.camera.position.x + this.cos * this.cameraDistance,
+			z: this.camera.position.z + this.sin * this.cameraDistance
 		};
 	}
 
@@ -129,12 +129,16 @@ class CameraMovement {
 		return this._followCamera;
 	}
 
+	get rad() {
+		return this.rotation / 180 * Math.PI;
+	}
+
 	get cos() {
-		return Math.cos(this.rotation);
+		return Math.cos(this.rad);
 	}
 
 	get sin() {
-		return Math.sin(this.rotation);
+		return Math.sin(this.rad);
 	}
 
 	get x() {

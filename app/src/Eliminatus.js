@@ -102,6 +102,10 @@ class Eliminatus {
 		entity.importFromTag(data.tags);
 	}
 
+	updateStructure(data, structure) {
+		structure.health = data.health;
+	}
+
 	updateEntityAttributeByEID(data, updateSelf=false) {
 		if(data.type === 'player' && data.tags.uid === this.player.uid) {
 			if(!updateSelf) return;
@@ -113,6 +117,14 @@ class Eliminatus {
 		if(!entity) return;
 
 		this.updateEntityAttribute(data, entity);
+	}
+
+	updateStructureByPosition(data) {
+		const structure = this.world.structures[this.world.getPositionTag(data.x, data.y)];
+
+		if(!structure) return;
+
+		this.updateStructure(data, structure);
 	}
 
 	attachListeners() {
@@ -139,6 +151,7 @@ class Eliminatus {
 
 		this.socket.on('world.tick', ({entityUpdate, structureUpdate}) => {
 			entityUpdate.forEach(v => this.updateEntityAttributeByEID(v, false));
+			structureUpdate.forEach(v => this.updateStructureByPosition(v));
 		});
 
 		this.socket.on('entity.attribute', v => this.updateEntityAttributeByEID(v, true));

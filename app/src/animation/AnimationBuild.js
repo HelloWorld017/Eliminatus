@@ -1,12 +1,15 @@
 import Animation from "./Animation";
-import ParticleEmitter from "./ParticleEmitter";
+import ParticleEmitter from "../graphics/GPUParticleSystem";
+import ParticleTextures from "./ParticleTextures";
 
-import {Vector3} from "three";
+import {Clock, Vector3} from "three";
 
 class AnimationBuild extends Animation {
 	constructor({targetHealth}) {
 		super();
 		this.targetHealth = targetHealth;
+		this.clock = new Clock;
+		this.tick = 0;
 	}
 
 	onAttach(structure) {
@@ -22,30 +25,47 @@ class AnimationBuild extends Animation {
 			particle.motion[key] += motionUpdate;
 		};
 
-		this.emitter = new ParticleEmitter(0x2196f3, 20);
-		this.emitter.emit(
-			new Vector3(structure.x, structure.y, structure.z), 20,
-			(particle) => particle.motion.set(Math.random() / 2 - .25, Math.random() / 2 - .25, Math.random() / 2 - .25),
-			(particle) => ['x', 'y', 'z'].forEach(k => checkBoundary(particle, k))
-		);
+		this.emitter = new ParticleEmitter({
+			maxParticles: 1000,
+			particleNoiseTex: ParticleTextures.particle.perlin,
+			particleSpriteTex: ParticleTextures.particle.particle
+		});
 
 		structure.model.children[0].material.transparent = true;
-		structure.model.children[0].material.opacity = 0;
+		structure.model.children[0].material.opacity = .2;
 
-		structure.world.renderer.scene.add(this.emitter.particleSystem);
+		structure.world.renderer.scene.add(this.emitter);
 	}
 
 	onDestroy(structure) {
-		structure.world.renderer.scene.remove(this.emitter.particleSystem);
+		structure.world.renderer.scene.remove(this.emitter);
 	}
 
 	onUpdate(structure) {
-		if(structure.health < this.targetHealth - 25) {
-			this.emitter.update();
+		if(structure.health < this.targetHealth - 20) {
+
+			const delta = this.clock.getDelta();
+			this.tick += delta;
+
+			this.emitter.update(this.tick);
+
+			for(let i = 50; i--;) {
+				this.emitter.spawnParticle({
+					position: new Vector3(structure.model.position.x, .5, structure.model.position.z),
+					positionRandomness: .2,
+					velocityRandomness: .8,
+					color: 0x2196f3,
+					size: 20,
+					sizeRandomness: .5,
+					lifetime: 20,
+					turbulence: .1
+				});
+			}
+
 			return true;
 		}
 
-		structure.model.children[0].materials[0].opacity += .2;
+		structure.model.children[0].materials[0].opacity += .4;
 
 		if(structure.health === this.targetHealth) {
 			structure.model.children[0].materials[0].opacity = 1;

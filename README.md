@@ -6,5 +6,8 @@ A simple web-based multiplayer RTS game.
  - [x] Modeling Structures & Entities
  - [x] Building Structures
  - [ ] Working Structure & Entities
- - [ ] Game Server
+ - [x] [Game Server](https://github.com/HelloWorld017/EliminatusServer) (WIP)
+ - [ ] Structures Health Bar
+ - [ ] Nametags
+ - [ ] HUDs including inventory
  - [ ] Spectors

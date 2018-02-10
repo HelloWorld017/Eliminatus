@@ -32,6 +32,7 @@
     "socket.io-client": "^2.0.4",
     "three": "^0.89.0",
     "three.meshline": "^1.0.3",
+    "threejs-gpu-particles": "git+https://github.com/flimshaw/THREE.GPUParticleSystem.git",
     "vue": "^2.5.13",
     "vue-ripple-directive": "^2.0.1",
     "vuex": "^3.0.1"
