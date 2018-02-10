@@ -1,8 +1,8 @@
 <template>
 	<section id="ui">
+		<el-hud v-show="ingame"></el-hud>
 		<transition name="fade">
-			<el-hud v-if="ingame"></el-hud>
-			<el-waitings v-else></el-waitings>
+			<el-waitings v-if="!ingame"></el-waitings>
 		</transition>
 	</section>
 </template>

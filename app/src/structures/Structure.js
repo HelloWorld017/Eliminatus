@@ -27,6 +27,15 @@ class Structure {
 		this.z = z;
 	}
 
+	attachAnimation(animation) {
+		this.world.structureAnimations.push([this, animation]);
+		animation.onAttach(this);
+	}
+
+	update(ctx) {
+		this.animation.forEach(v => v.update(this, ctx));
+	}
+
 	getGridPosition() {
 		return this.constructor.getGridPositionByAttr(
 			this.x, 0, this.z, this.model.rotation.y

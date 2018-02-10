@@ -4,27 +4,35 @@ class Animation {
 		this.tick = 0;
 	}
 
-	onAttach(ent) {
+	onAttach(object) {
 
 	}
 
-	onUpdate(entity, context) {
+	onUpdate(object, context) {
 
 	}
 
-	attach(ent) {
-		this.entity = ent;
-		this.onAttach(ent);
+	onDestroy(object, context) {
+
 	}
 
-	update(entity, context) {
+	attach(object) {
+		this.object = object;
+		this.onAttach(object);
+	}
+
+	update(object, context) {
 		this.tick++;
 
 		if(this.tick > this.length) {
+			this.onDestroy();
 			return false;
 		}
 
-		return onUpdate(entity, context);
+		const returnVal = this.onUpdate(object, context);
+
+		if(!returnVal) this.onDestroy(object, context);
+		return returnVal;
 	}
 
 	get length() {

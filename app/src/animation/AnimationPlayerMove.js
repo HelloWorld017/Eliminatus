@@ -1,7 +1,7 @@
 import Animation from "./Animation";
 
 class AnimationPlayerMove extends Animation {
-	constructor(targetPosition) {
+	constructor({targetPosition}) {
 		super();
 		this.position = targetPosition;
 		this.theta = 0;
@@ -22,14 +22,16 @@ class AnimationPlayerMove extends Animation {
 			entity.model.position.x -= Math.cos(this.theta) * 1;
 			entity.model.position.z -= Math.sin(this.theta) * 1;
 		}
+
+		return true;
 	}
 
-	static get length() {
+	get length() {
 		return 20;
 	}
 
 	static get animationId() {
-		return "player_move";
+		return "player.move";
 	}
 }
 

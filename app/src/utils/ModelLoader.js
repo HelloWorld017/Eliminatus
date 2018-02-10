@@ -24,7 +24,8 @@ class ModelLoader {
 
 		const texture = await loadPromise(new TextureLoader, pngPath);
 
-		model.children[0].material.normalMap = texture;
+		model.children[0].castShadow = true;
+		model.children[0].receiveShadow = true;
 		model.children[0].material.ambient = new Color(0xffffff);
 		model.children[0].geometry.translate(-translateMap.x, 0, -translateMap.y);
 		model.children[0].geometry.computeBoundingBox();

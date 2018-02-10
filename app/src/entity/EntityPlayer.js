@@ -14,23 +14,22 @@ class EntityPlayer extends Entity {
 
 		this.buildMode = false;
 		this.buildKeymap = new Map([
-			['1', 'headquater'],
-			['2', 'factory_core'],
+			['1', 'factory_core'],
+			['2', 'engineering_core'],
 			['3', 'generator_core'],
-			['4', 'repair_core'],
-			['5', 'turret'],
-			['6', 'wall'],
-			['7', 'wall_rot'],
-			['8', 'tree']
+			['4', 'extractor_core'],
+			['5', 'transmitter_core'],
+			['6', 'repair_core'],
+			['7', 'turret'],
+			['8', 'wall'],
+			['9', 'wall_rot']
 		]);
 
 		this.keyMap = new Map([
-			['tab', () => this.toggleFollowCamera()],
 			['`', () => this.cancelBuilding()],
 			['r', () => this.buildRotation = modulo(this.buildRotation - Math.PI / 2, Math.PI * 2)]
 		]);
 
-		this._followCamera = false;
 		this.raycaster = new Raycaster;
 		this.mouse = new Vector2;
 		this.buildPoint = new Vector3;
@@ -39,29 +38,6 @@ class EntityPlayer extends Entity {
 		this.tempModelLoader = new TempModel(this.world.modelLoader);
 
 		this.inventory = {};
-	}
-
-	get followCamera() {
-		return this._followCamera;
-	}
-
-	set followCamera(val) {
-		this._followCamera = val;
-		this.game.store.state.followCamera = val;
-	}
-
-	lookPlayer() {
-		this.world.renderer.camera.position.x = this.model.position.x;
-		this.world.renderer.camera.position.z = this.model.position.z - this.world.renderer.camera.position.y / 2;
-	}
-
-	toggleFollowCamera() {
-		if(this.followCamera) {
-			this.followCamera = false;
-		} else {
-			this.followCamera = true;
-			this.lookPlayer();
-		}
 	}
 
 	cancelBuilding() {
@@ -149,10 +125,10 @@ class EntityPlayer extends Entity {
 				const point = intersects.pop().point;
 				const myModel = this.model.position;
 
-				if(Math.hypot(point.x - myModel.x, point.z - myModel.z) > 100) {
+				if(Math.hypot(point.x - myModel.x, point.z - myModel.z) > 200) {
 					const theta = Math.atan2(point.z - myModel.z, point.x - myModel.x);
-					point.x = myModel.x + Math.cos(theta) * 100;
-					point.z = myModel.z + Math.sin(theta) * 100;
+					point.x = myModel.x + Math.cos(theta) * 200;
+					point.z = myModel.z + Math.sin(theta) * 200;
 				}
 
 				const boundMap = this.world.structureByType[this.buildMode].getBoundMap(this.buildRotation);
@@ -180,8 +156,6 @@ class EntityPlayer extends Entity {
 				}
 			}
 		}
-
-		if(this.followCamera) this.lookPlayer();
 
 		this.game.announce('game.player.move', {
 			x: this.model.position.x,

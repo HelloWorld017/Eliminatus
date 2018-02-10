@@ -1,7 +1,9 @@
 import deepExtend from "deep-extend";
 import ModelLoader from "../utils/ModelLoader";
+import Particle from "../animation/Particle";
 import Renderer from "../graphics/Renderer";
 
+import animations from "../animation";
 import loadEntity from "../entity";
 import loadStructures from "../structures";
 
@@ -28,6 +30,7 @@ class World {
 		this.deathNote = [];
 		this.entities = new Map();
 		this.structures = {};
+		this.structureAnimations = [];
 
 		this.modelLoader = new ModelLoader();
 		this.renderer = new Renderer(this);
@@ -36,6 +39,8 @@ class World {
 	async init() {
 		this.entitiesByType = await loadEntity(this.modelLoader);
 		this.structureByType = await loadStructures(this.modelLoader);
+		this.animationsByType = animations;
+		await Particle.init();
 	}
 
 	spawnEntity(eid, entity) {
@@ -75,6 +80,8 @@ class World {
 		this.entities.forEach((v, k) => v.update(ctx));
 		this.deathNote.forEach((v) => this.entities.delete(v));
 		this.deathNote = [];
+
+		this.structureAnimations = this.structureAnimations.filter(v => v[1].update(v[0], ctx));
 	}
 }
 

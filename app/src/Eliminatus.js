@@ -1,17 +1,14 @@
+import CameraMovement from "./middlewares/CameraMovement";
 import EntityPlayer from "./entity/EntityPlayer";
 import KeyboardInput from "./middlewares/KeyboardInput";
 import MouseInput from "./middlewares/MouseInput";
-import MouseMovement from "./middlewares/MouseMovement";
+import Minimap from "./middlewares/Minimap";
 import World from "./world/World";
 
 class Eliminatus {
 	constructor(store, options) {
 		this.world = new World(this, options);
-		this.middlewares = [
-			new MouseInput().handler,
-			new KeyboardInput().handler,
-			MouseMovement
-		];
+		this.middlewares = [];
 		this.store = store;
 
 		this.updateBound = this.update.bind(this);
@@ -28,6 +25,13 @@ class Eliminatus {
 		this.player.uid = uid;
 		this.world.spawnEntity(-1, this.player);
 		this.world.renderer.bind(this.player.model);
+
+		this.middlewares = [
+			new MouseInput().handler,
+			new KeyboardInput().handler,
+			new CameraMovement().handler,
+			new Minimap(this).handler
+		];
 
 		this.update();
 		this.renderTick();
@@ -56,6 +60,13 @@ class Eliminatus {
 
 	announce(tag, payload) {
 		this.socket.emit(tag, payload);
+	}
+
+	createAnimationFromData(ani) {
+		const animationClass = this.world.animationsByType[ani.type];
+		const animation = new animationClass(ani.args);
+
+		return animation;
 	}
 
 	createEntityFromData(ent) {
@@ -132,8 +143,11 @@ class Eliminatus {
 
 		this.socket.on('entity.attribute', v => this.updateEntityAttributeByEID(v, true));
 		this.socket.on('structure.spawn', obj => {
-			const structureObject = this.createStructureFromData(obj);
+			const structureObject = this.createStructureFromData(obj.structure);
 			this.world.addStructure(structureObject);
+			obj.animate.forEach(v => {
+				structureObject.attachAnimation(this.createAnimationFromData(v));
+			});
 		});
 	}
 }

@@ -1,4 +1,6 @@
 import Structure from "./Structure";
+import {Vector2} from "three";
+
 import EngineeringCoreModel from "../../models/structures/engineering_core.obj";
 import EngineeringCoreMaterial from "../../models/structures/engineering_core.mtl";
 import EngineeringCoreTexture from "../../models/structures/engineering_core.png";

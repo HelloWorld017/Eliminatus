@@ -1,5 +1,6 @@
 import StructureBarrel from "./StructureBarrel";
 import StructureEngineeringCore from "./StructureEngineeringCore";
+import StructureExtractorCore from "./StructureExtractorCore";
 import StructureFactoryCore from "./StructureFactoryCore";
 import StructureGeneratorCore from "./StructureGeneratorCore";
 import StructureHeadquater from "./StructureHeadquater";
@@ -9,6 +10,7 @@ import StructureRepairCore from "./StructureRepairCore";
 import StructureRock from "./StructureRock";
 import StructureRotatedWall from "./StructureRotatedWall";
 import StructureStone from "./StructureStone";
+import StructureTransmitterCore from "./StructureTransmitterCore";
 import StructureTree from "./StructureTree";
 import StructureTurret from "./StructureTurret";
 import StructureWall from "./StructureWall";
@@ -17,6 +19,7 @@ export default async function loadStructures(modelLoader) {
 	const structures = [
 		StructureBarrel,
 		StructureEngineeringCore,
+		StructureExtractorCore,
 		StructureFactoryCore,
 		StructureGeneratorCore,
 		StructureHeadquater,
@@ -26,6 +29,7 @@ export default async function loadStructures(modelLoader) {
 		StructureRock,
 		StructureRotatedWall,
 		StructureStone,
+		StructureTransmitterCore,
 		StructureTree,
 		StructureTurret,
 		StructureWall

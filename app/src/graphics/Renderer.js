@@ -1,10 +1,12 @@
 import {
 	AmbientLight,
+	DirectionalLight,
 	DoubleSide,
 	Fog,
 	Mesh,
 	MeshBasicMaterial,
 	Object3D,
+	PCFSoftShadowMap,
 	PerspectiveCamera,
 	PlaneGeometry,
 	RepeatWrapping,
@@ -20,7 +22,8 @@ import WindowResize from "../utils/WindowResize";
 class Renderer {
 	constructor(world) {
 		this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.light = new AmbientLight(0xeeeeee);
+		this.light = new AmbientLight(0xeeeeee, .4);
+		this.directionalLight = new DirectionalLight(0xffffff, .9);
 		this.scene = new Scene();
 		this.terrain = new Object3D();
 
@@ -37,6 +40,7 @@ class Renderer {
 		this.renderer.setClearColor(0x303030, 1.0);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.shadowMap.enabled = true;
+		this.renderer.shadowMap.type = PCFSoftShadowMap;
 
 		const texture = await loadPromise(new TextureLoader, WorldTexture);
 		texture.wrapS = texture.wrapT = RepeatWrapping;
@@ -50,9 +54,22 @@ class Renderer {
 		floor.position.y = -0.1;
 		floor.position.z = this.world.height / 2;
 		floor.rotation.x = Math.PI / 2;
+		floor.receiveShadow = true;
 		this.terrain.add(floor);
 
+		this.directionalLight.position.x = this.world.width / 2;
+		this.directionalLight.position.y = 1000;
+		this.directionalLight.position.z = this.world.height / 2 - 1000;
+		this.directionalLight.target.x = this.world.width / 2;
+		this.directionalLight.target.y = 0;
+		this.directionalLight.target.z = this.world.height / 2;
+		this.directionalLight.castShadow = true;
+
+		this.directionalLight.shadow.camera.near = 0.1;
+		this.directionalLight.shadow.camera.far = 1000;
+
 		this.scene.add(this.terrain);
+		this.scene.add(this.directionalLight);
 		this.scene.add(this.light);
 		this.scene.add(this.camera);
 
@@ -63,8 +80,9 @@ class Renderer {
 
 	bind(model) {
 		this.playerModel = model;
+		this.directionalLight.target = model;
 
-		this.camera.position.set(model.position.x + 0, model.position.y + 200, model.position.z + -100);
+		this.camera.position.set(model.position.x + 0, model.position.y + 200, model.position.z - 100);
 		this.camera.lookAt(this.playerModel.position);
 	}
 
