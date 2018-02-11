@@ -1,4 +1,5 @@
 import deepExtend from "deep-extend";
+import HealthBarRasterized from "../graphics/HealthBarRasterized";
 import ModelLoader from "../utils/ModelLoader";
 import ParticleTextures from "../animation/ParticleTextures";
 import Renderer from "../graphics/Renderer";
@@ -40,7 +41,9 @@ class World {
 		this.entitiesByType = await loadEntity(this.modelLoader);
 		this.structureByType = await loadStructures(this.modelLoader);
 		this.animationsByType = animations;
+
 		await ParticleTextures.init();
+		await HealthBarRasterized.init();
 	}
 
 	spawnEntity(eid, entity) {

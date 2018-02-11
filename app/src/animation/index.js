@@ -1,11 +1,11 @@
 import AnimationBuild from "./AnimationBuild";
-import AnimationPlayerMove from "./AnimationPlayerMove";
+import AnimationPlayerPick from "./AnimationPlayerPick";
 
 const exportMap = {};
 
 [
 	AnimationBuild,
-	AnimationPlayerMove
+	AnimationPlayerPick
 ].forEach((v) => {
 	exportMap[v.animationId] = v;
 });

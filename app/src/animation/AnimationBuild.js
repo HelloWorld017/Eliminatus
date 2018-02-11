@@ -42,34 +42,36 @@ class AnimationBuild extends Animation {
 	}
 
 	onUpdate(structure) {
-		if(structure.health < this.targetHealth - 20) {
+		if(structure.health < this.targetHealth - 200) {
 
 			const delta = this.clock.getDelta();
 			this.tick += delta;
 
 			this.emitter.update(this.tick);
 
-			for(let i = 50; i--;) {
-				this.emitter.spawnParticle({
-					position: new Vector3(structure.model.position.x, .5, structure.model.position.z),
-					positionRandomness: .2,
-					velocityRandomness: .8,
-					color: 0x2196f3,
-					size: 20,
-					sizeRandomness: .5,
-					lifetime: 20,
-					turbulence: .1
-				});
+			if(structure.health < this.targetHealth - 250) {
+				for(let i = 50; i--;) {
+					this.emitter.spawnParticle({
+						position: new Vector3(structure.model.position.x, .5, structure.model.position.z),
+						positionRandomness: .2,
+						velocityRandomness: .8,
+						color: 0x2196f3,
+						size: 20,
+						sizeRandomness: .5,
+						lifetime: 10,
+						turbulence: .1
+					});
+				}
 			}
 
 			return true;
 		}
 
-		structure.model.children[0].materials[0].opacity += .4;
+		structure.model.children[0].material.opacity += .02;
 
 		if(structure.health === this.targetHealth) {
-			structure.model.children[0].materials[0].opacity = 1;
-			structure.model.children[0].materials[0].transparent = false;
+			structure.model.children[0].material.opacity = 1;
+			structure.model.children[0].material.transparent = false;
 			return false;
 		}
 

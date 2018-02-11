@@ -1,4 +1,5 @@
-import {Vector2} from "three";
+import {Group, Vector2} from "three";
+import HealthBarRasterized from "../graphics/HealthBarRasterized";
 
 class Structure {
 	constructor(structName, world, x, y, z) {
@@ -6,9 +7,14 @@ class Structure {
 		this.world = world;
 		this.game = world.game;
 
-		this.model = world.modelLoader.get(structName);
+		this.hpbar = new HealthBarRasterized();
 
-		this.health = 300;
+		this.model = new Group;
+		this.model.add(world.modelLoader.get(structName));
+		this.model.add(this.hpbar.model);
+
+		this.maxHealth = 300;
+		this._health = 300;
 
 		['x', 'y', 'z'].forEach(key => {
 			Object.defineProperty(this, key, {
@@ -25,6 +31,12 @@ class Structure {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+
+		this.hpbar.model.position.set(
+			this.boundMap.x,
+			this.boundMap.y + 60,
+			this.boundMap.z
+		);
 	}
 
 	attachAnimation(animation) {
@@ -40,6 +52,15 @@ class Structure {
 		return this.constructor.getGridPositionByAttr(
 			this.x, 0, this.z, this.model.rotation.y
 		);
+	}
+
+	get health() {
+		return this._health;
+	}
+
+	set health(val) {
+		this._health = val;
+		this.hpbar.update(val / this.maxHealth);
 	}
 
 	static get positioningMethod() {

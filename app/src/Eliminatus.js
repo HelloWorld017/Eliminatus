@@ -75,9 +75,7 @@ class Eliminatus {
 
 		const entityClass = this.world.entitiesByType[ent.type];
 		const entityObject = new entityClass(this.world, ent.x, ent.y, ent.z);
-		entityObject.model.rotation.y = ent.rotation;
-		entityObject.health = ent.health;
-		entityObject.importFromTag(ent.tags);
+		this.updateEntityAttribute(ent, entityObject);
 
 		return entityObject;
 	}
@@ -85,25 +83,26 @@ class Eliminatus {
 	createStructureFromData(str) {
 		const structureClass = this.world.structureByType[str.type];
 		const structureObject = new structureClass(this.world, str.x, 0, str.y);
-		structureObject.rotation = str.rotation;
-		structureObject.health = str.health;
+		this.updateStructure(str, structureObject);
 
 		return structureObject;
 	}
 
 	updateEntityAttribute(data, entity) {
-		entity.model.position.x = data.x;
-		entity.model.position.y = data.y;
-		entity.model.position.z = data.z;
+		if(data.x) entity.model.position.x = data.x;
+		if(data.y) entity.model.position.y = data.y;
+		if(data.z) entity.model.position.z = data.z;
 
-		entity.model.rotation.y = data.rotation;
+		if(data.rotation) entity.model.rotation.y = data.rotation;
 
-		entity.health = data.health;
-		entity.importFromTag(data.tags);
+		if(data.health) entity.health = data.health;
+		if(data.tags) entity.importFromTag(data.tags);
 	}
 
 	updateStructure(data, structure) {
-		structure.health = data.health;
+		if(data.health) structure.health = data.health;
+		if(data.maxHealth) structure.maxHealth = data.maxHealth;
+		if(data.rotation) structure.rotation = data.rotation;
 	}
 
 	updateEntityAttributeByEID(data, updateSelf=false) {
@@ -120,7 +119,11 @@ class Eliminatus {
 	}
 
 	updateStructureByPosition(data) {
-		const structure = this.world.structures[this.world.getPositionTag(data.x, data.y)];
+		const gridVec = {
+			x: Math.floor(data.x / 40),
+			y: Math.floor(data.y / 40)
+		};
+		const structure = this.world.structures[this.world.getPositionTag(gridVec)];
 
 		if(!structure) return;
 

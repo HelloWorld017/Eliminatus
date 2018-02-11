@@ -9,7 +9,10 @@ class ModelLoader {
 	}
 
 	get(name) {
-		return this.models[name].clone();
+		const model = this.models[name].clone();
+		model.children[0].material = model.children[0].material.clone();
+
+		return model;
 	}
 
 	async load(name, objPath, mtlPath, pngPath, translateMap={x: 0, y: 0}) {

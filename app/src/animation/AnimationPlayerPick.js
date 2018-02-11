@@ -1,6 +1,6 @@
 import Animation from "./Animation";
 
-class AnimationPlayerMove extends Animation {
+class AnimationPlayerPick extends Animation {
 	constructor({targetPosition}) {
 		super();
 		this.position = targetPosition;
@@ -31,8 +31,8 @@ class AnimationPlayerMove extends Animation {
 	}
 
 	static get animationId() {
-		return "player.move";
+		return "player.pick";
 	}
 }
 
-export default AnimationPlayerMove;
+export default AnimationPlayerPick;
