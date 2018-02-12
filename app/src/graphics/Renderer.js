@@ -32,8 +32,6 @@ class Renderer {
 		this.world = world;
 		this.windowResize = new WindowResize(this.renderer, this.camera);
 		this.terrain = new Object3D();
-
-		this.init();
 	}
 
 	async init() {

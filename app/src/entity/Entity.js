@@ -1,3 +1,5 @@
+import ThreeOimo from "../physics/ThreeOimo";
+
 class Entity {
 	constructor(entityName, world, x, y, z) {
 		this.type = entityName;
@@ -8,6 +10,8 @@ class Entity {
 		this.model.position.x = x;
 		this.model.position.y = y;
 		this.model.position.z = z;
+
+		this.physicsModel = ThreeOimo.createBodyFromMesh(this.world.physicsWorld, this.model);
 
 		this.health = 50;
 		this.animation = [];
@@ -23,6 +27,7 @@ class Entity {
 	}
 
 	update(ctx) {
+		ThreeOimo.updateObject3dWithBody(this.model, this.physicsModel);
 		this.animation = this.animation.filter(v => {
 			return v.update(this, ctx);
 		});

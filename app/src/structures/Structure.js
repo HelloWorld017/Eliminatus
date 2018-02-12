@@ -1,5 +1,6 @@
 import {Group, Vector2} from "three";
 import HealthBarRasterized from "../graphics/HealthBarRasterized";
+import ThreeOimo from "../physics/ThreeOimo";
 
 class Structure {
 	constructor(structName, world, x, y, z) {
@@ -11,7 +12,6 @@ class Structure {
 
 		this.model = new Group;
 		this.model.add(world.modelLoader.get(structName));
-		this.model.add(this.hpbar.model);
 
 		this.maxHealth = 300;
 		this._health = 300;
@@ -33,9 +33,17 @@ class Structure {
 		this.z = z;
 
 		this.hpbar.model.position.set(
-			this.boundMap.x,
-			this.boundMap.y + 60,
-			this.boundMap.z
+			this.hpBarPosition.x,
+			this.hpBarPosition.y,
+			this.hpBarPosition.z
+		);
+
+		this.hpBarIncluded = false;
+
+		this.physicsModel = ThreeOimo.createBodyFromMesh(
+			this.world.physicsWorld,
+			this.model.children[0],
+			{move: false}
 		);
 	}
 
@@ -54,13 +62,25 @@ class Structure {
 		);
 	}
 
+	get structModel() {
+		return this.model.children[0].children[0];
+	}
+
 	get health() {
 		return this._health;
 	}
 
 	set health(val) {
 		this._health = val;
-		this.hpbar.update(val / this.maxHealth);
+		if(val === this.maxHealth && this.hpBarIncluded) {
+			this.model.remove(this.hpbar.model);
+			this.hpBarIncluded = false;
+		} else if (val !== this.maxHealth && !this.hpBarIncluded) {
+			this.model.add(this.hpbar.model);
+			this.hpBarIncluded = true;
+		}
+
+		this.hpbar.update(val, this.maxHealth);
 	}
 
 	static get positioningMethod() {
@@ -85,6 +105,14 @@ class Structure {
 
 	activateMenu() {
 
+	}
+
+	get hpBarPosition() {
+		return {
+			x: 0,
+			y: 60,
+			z: 0
+		};
 	}
 
 	get boundMap() {

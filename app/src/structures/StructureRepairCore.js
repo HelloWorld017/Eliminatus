@@ -9,6 +9,14 @@ class StructureRepairCore extends Structure{
 	constructor(world, x, y, z) {
 		super(StructureRepairCore.type, world, x, y, z);
 	}
+	
+	get hpBarPosition() {
+		return {
+			x: 0,
+			y: 100,
+			z: 0
+		};
+	}
 
 	static async registerModel(loader) {
 		return loader.load(

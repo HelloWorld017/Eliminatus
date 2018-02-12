@@ -3,6 +3,8 @@ import HealthBarRasterized from "../graphics/HealthBarRasterized";
 import ModelLoader from "../utils/ModelLoader";
 import ParticleTextures from "../animation/ParticleTextures";
 import Renderer from "../graphics/Renderer";
+import ThreeOimo from "../physics/ThreeOimo";
+import {World as OimoWorld} from "oimo";
 
 import animations from "../animation";
 import loadEntity from "../entity";
@@ -35,6 +37,11 @@ class World {
 
 		this.modelLoader = new ModelLoader();
 		this.renderer = new Renderer(this);
+
+		this.physicsWorld = new OimoWorld({
+			worldScale: 20,
+			info: false
+		});
 	}
 
 	async init() {
@@ -42,8 +49,11 @@ class World {
 		this.structureByType = await loadStructures(this.modelLoader);
 		this.animationsByType = animations;
 
+		await this.renderer.init();
 		await ParticleTextures.init();
 		await HealthBarRasterized.init();
+
+		ThreeOimo.createBodyFromMesh(this.physicsWorld, this.renderer.terrain.children[0], {move: false});
 	}
 
 	spawnEntity(eid, entity) {
@@ -80,6 +90,7 @@ class World {
 	}
 
 	tick(ctx) {
+		this.physicsWorld.step();
 		this.entities.forEach((v, k) => v.update(ctx));
 		this.deathNote.forEach((v) => this.entities.delete(v));
 		this.deathNote = [];

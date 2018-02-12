@@ -31,8 +31,8 @@ class AnimationBuild extends Animation {
 			particleSpriteTex: ParticleTextures.particle.particle
 		});
 
-		structure.model.children[0].material.transparent = true;
-		structure.model.children[0].material.opacity = .2;
+		structure.structModel.material.transparent = true;
+		structure.structModel.material.opacity = .2;
 
 		structure.world.renderer.scene.add(this.emitter);
 	}
@@ -67,11 +67,11 @@ class AnimationBuild extends Animation {
 			return true;
 		}
 
-		structure.model.children[0].material.opacity += .02;
+		structure.structModel.material.opacity += .02;
 
 		if(structure.health === this.targetHealth) {
-			structure.model.children[0].material.opacity = 1;
-			structure.model.children[0].material.transparent = false;
+			structure.structModel.material.opacity = 1;
+			structure.structModel.material.transparent = false;
 			return false;
 		}
 

@@ -16,25 +16,34 @@ import loadPromise from "../utils/LoadPromise";
 class HealthBar {
 	constructor(object) {
 		this.model = new Sprite(HealthBar.hpbars['100']);
+		this.model.scale.set(30, 30, 1);
 	}
 
 	update(hp, maxHp) {
 		this.model.material = HealthBar.hpbars[`${Math.round(hp / maxHp * 10) * 10}`];
 	}
 
+	static async getMaterial(tex) {
+		const mat = new SpriteMaterial({
+			map: await loadPromise(new TextureLoader, tex)
+		});
+
+		return mat;
+	}
+
 	static async init() {
 		this.hpbars = {
-			'0': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar0)}),
-			'10': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar10)}),
-			'20': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar20)}),
-			'30': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar30)}),
-			'40': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar40)}),
-			'50': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar50)}),
-			'60': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar60)}),
-			'70': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar70)}),
-			'80': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar80)}),
-			'90': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar90)}),
-			'100': new SpriteMaterial({map: await loadPromise(new TextureLoader, HpBar100)})
+			'0': await this.getMaterial(HpBar0),
+			'10': await this.getMaterial(HpBar10),
+			'20': await this.getMaterial(HpBar20),
+			'30': await this.getMaterial(HpBar30),
+			'40': await this.getMaterial(HpBar40),
+			'50': await this.getMaterial(HpBar50),
+			'60': await this.getMaterial(HpBar60),
+			'70': await this.getMaterial(HpBar70),
+			'80': await this.getMaterial(HpBar80),
+			'90': await this.getMaterial(HpBar90),
+			'100': await this.getMaterial(HpBar100)
 		};
 	}
 }
