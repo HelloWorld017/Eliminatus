@@ -1,6 +1,5 @@
-import {Group, Vector2} from "three";
+import {Box3, Group, Vector2} from "three";
 import HealthBarRasterized from "../graphics/HealthBarRasterized";
-import ThreeOimo from "../physics/ThreeOimo";
 
 class Structure {
 	constructor(structName, world, x, y, z) {
@@ -32,6 +31,8 @@ class Structure {
 		this.y = y;
 		this.z = z;
 
+		this.aabb = new Box3().setFromObject(this.model);
+
 		this.hpbar.model.position.set(
 			this.hpBarPosition.x,
 			this.hpBarPosition.y,
@@ -39,12 +40,6 @@ class Structure {
 		);
 
 		this.hpBarIncluded = false;
-
-		this.physicsModel = ThreeOimo.createBodyFromMesh(
-			this.world.physicsWorld,
-			this.model.children[0],
-			{move: false}
-		);
 	}
 
 	attachAnimation(animation) {

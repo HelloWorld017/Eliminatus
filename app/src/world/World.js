@@ -3,13 +3,12 @@ import HealthBarRasterized from "../graphics/HealthBarRasterized";
 import ModelLoader from "../utils/ModelLoader";
 import ParticleTextures from "../animation/ParticleTextures";
 import Renderer from "../graphics/Renderer";
-import ThreeOimo from "../physics/ThreeOimo";
-import {World as OimoWorld} from "oimo";
 
 import animations from "../animation";
 import loadEntity from "../entity";
 import loadStructures from "../structures";
 
+const CHUNK_UNIT = 200;
 const DEFAULT_SETTINGS = {
 	width: 8000,
 	height: 8000,
@@ -33,15 +32,11 @@ class World {
 		this.deathNote = [];
 		this.entities = new Map();
 		this.structures = {};
+		this.chunk = {};
 		this.structureAnimations = [];
 
 		this.modelLoader = new ModelLoader();
 		this.renderer = new Renderer(this);
-
-		this.physicsWorld = new OimoWorld({
-			worldScale: 20,
-			info: false
-		});
 	}
 
 	async init() {
@@ -52,8 +47,6 @@ class World {
 		await this.renderer.init();
 		await ParticleTextures.init();
 		await HealthBarRasterized.init();
-
-		ThreeOimo.createBodyFromMesh(this.physicsWorld, this.renderer.terrain.children[0], {move: false});
 	}
 
 	spawnEntity(eid, entity) {
@@ -74,8 +67,17 @@ class World {
 
 		const positions = object.getGridPosition();
 		positions.forEach((v) => {
-			const {x, y} = v;
-			this.structures[this.getPositionTag({x, y})] = object;
+			this.structures[this.getPositionTag(v)] = object;
+
+			if(!this.chunk[this.getChunk(v)]) this.chunk[this.getChunk(v)] = {};
+			this.chunk[this.getChunk(v)][this.getPositionTag(v)] = object;
+		});
+	}
+
+	getChunk({x, y}) {
+		return this.getPositionTag({
+			x: Math.floor(x * 40 / CHUNK_UNIT),
+			y: Math.floor(y * 40 / CHUNK_UNIT)
 		});
 	}
 
@@ -85,12 +87,12 @@ class World {
 		const positions = object.getGridPosition();
 		positions.forEach((v) => {
 			const {x, y} = v;
-			delete this.structures[this.getPositionTag({x, y})];
+			delete this.structures[this.getPositionTag(v)];
+			delete this.chunk[this.getChunk(v)][this.getPositionTag(v)];
 		});
 	}
 
 	tick(ctx) {
-		this.physicsWorld.step();
 		this.entities.forEach((v, k) => v.update(ctx));
 		this.deathNote.forEach((v) => this.entities.delete(v));
 		this.deathNote = [];

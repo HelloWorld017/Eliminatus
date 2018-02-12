@@ -111,6 +111,18 @@ class EntityPlayer extends Entity {
 
 			this.model.position.x += sin * speedModifier;
 			this.model.position.z += cos * speedModifier;
+
+			const collidesObjects = this.checkCollisionInChunk();
+
+			collidesObjects.forEach(collidesObject => {
+				const outputTheta = Math.atan2(
+					collidesObject.z - this.model.position.z,
+					collidesObject.x - this.model.position.x
+				);
+
+				this.model.position.x -= Math.cos(outputTheta) * 4;
+				this.model.position.z -= Math.sin(outputTheta) * 4;
+			});
 		}
 
 		if(this.buildMode) {

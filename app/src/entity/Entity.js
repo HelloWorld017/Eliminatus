@@ -1,4 +1,6 @@
-import ThreeOimo from "../physics/ThreeOimo";
+import {Box3} from "three";
+
+const CHUNK_UNIT = 200;
 
 class Entity {
 	constructor(entityName, world, x, y, z) {
@@ -11,10 +13,10 @@ class Entity {
 		this.model.position.y = y;
 		this.model.position.z = z;
 
-		this.physicsModel = ThreeOimo.createBodyFromMesh(this.world.physicsWorld, this.model);
-
 		this.health = 50;
 		this.animation = [];
+
+		this.aabb = new Box3();
 	}
 
 	render() {
@@ -27,10 +29,55 @@ class Entity {
 	}
 
 	update(ctx) {
-		ThreeOimo.updateObject3dWithBody(this.model, this.physicsModel);
 		this.animation = this.animation.filter(v => {
 			return v.update(this, ctx);
 		});
+	}
+
+	checkCollisionInChunk() {
+		let collidesStructure = [];
+
+		let checkedKey = {};
+		this.getChunks().forEach(chunkKey => {
+			if(this.world.chunk[chunkKey]) {
+				const foundObject = Object.keys(this.world.chunk[chunkKey]).filter(structureKey => {
+					if(checkedKey[structureKey]) return;
+
+					if(this.world.chunk[chunkKey][structureKey].aabb.intersectsBox(this.aabb)) {
+						checkedKey[structureKey] = true;
+						return true;
+					}
+
+					return false;
+				});
+
+				if(foundObject.length > 0)
+					collidesStructure.push(...foundObject.map(v => this.world.structures[v]));
+			}
+		});
+
+		return collidesStructure;
+	}
+
+	getChunks() {
+		const aabb = this.aabb.setFromObject(this.model);
+		const chunks = [];
+
+		for(
+			let x = Math.floor(aabb.min.x / CHUNK_UNIT);
+			x <= Math.floor(aabb.max.x / CHUNK_UNIT);
+			x++
+		) {
+			for(
+				let y = Math.floor(aabb.min.z / CHUNK_UNIT);
+				y <= Math.floor(aabb.max.z / CHUNK_UNIT);
+				y++
+			) {
+				chunks.push(`${x}:${y}`);
+			}
+		}
+
+		return chunks;
 	}
 
 	static async registerModel() {
