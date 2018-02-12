@@ -41,10 +41,10 @@ class Entity {
 		this.getChunks().forEach(chunkKey => {
 			if(this.world.chunk[chunkKey]) {
 				const foundObject = Object.keys(this.world.chunk[chunkKey]).filter(structureKey => {
-					if(checkedKey[structureKey]) return;
+					if(checkedKey[this.world.structures[structureKey].uniqueId]) return;
 
 					if(this.world.chunk[chunkKey][structureKey].aabb.intersectsBox(this.aabb)) {
-						checkedKey[structureKey] = true;
+						checkedKey[this.world.structures[structureKey].uniqueId] = true;
 						return true;
 					}
 

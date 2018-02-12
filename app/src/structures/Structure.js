@@ -42,6 +42,10 @@ class Structure {
 		this.hpBarIncluded = false;
 	}
 
+	get uniqueId() {
+		return `${this.x}:${this.y}`;
+	}
+
 	attachAnimation(animation) {
 		this.world.structureAnimations.push([this, animation]);
 		animation.onAttach(this);

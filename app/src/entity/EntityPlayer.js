@@ -73,11 +73,12 @@ class EntityPlayer extends Entity {
 		}
 
 		let speedModifier = 0;
+		let speed = 4;
 
 		if(ctx.keyboard.pressingKeys.get('w')) {
-			speedModifier = 4;
+			speedModifier = 1;
 		} else if(ctx.keyboard.pressingKeys.get('s')) {
-			speedModifier = -4;
+			speedModifier = -1;
 		}
 
 		ctx.keyboard.events.forEach(({type, key}) => {
@@ -109,20 +110,41 @@ class EntityPlayer extends Entity {
 			const cos = Math.cos(this.model.rotation.y);
 			const sin = Math.sin(this.model.rotation.y);
 
-			this.model.position.x += sin * speedModifier;
-			this.model.position.z += cos * speedModifier;
+			const xMovement = sin * speed;
+			const yMovement = cos * speed;
+
+			const revertPosition = {
+				x: this.model.position.x - xMovement,
+				z: this.model.position.z - yMovement
+			};
+
+			this.model.position.x += xMovement * speedModifier;
+			this.model.position.z += yMovement * speedModifier;
+
+			let collideX = 0, collideY = 0;
 
 			const collidesObjects = this.checkCollisionInChunk();
 
-			collidesObjects.forEach(collidesObject => {
+			collidesObjects.forEach((collidesObject, i) => {
 				const outputTheta = Math.atan2(
-					collidesObject.z - this.model.position.z,
-					collidesObject.x - this.model.position.x
+					collidesObject.z - revertPosition.z,
+					collidesObject.x - revertPosition.x
 				);
 
-				this.model.position.x -= Math.cos(outputTheta) * 4;
-				this.model.position.z -= Math.sin(outputTheta) * 4;
+				 collideX -= Math.cos(outputTheta) * speed * 1.5;
+				 collideY -= Math.sin(outputTheta) * speed * 1.5;
 			});
+
+			if(Math.abs(xMovement) < Math.abs(collideX)) {
+				collideX = Math.sign(collideX) * Math.abs(xMovement);
+			}
+
+			if(Math.abs(yMovement) < Math.abs(collideY)) {
+				collideY = Math.sign(collideY) * Math.abs(yMovement);
+			}
+
+			this.model.position.x += collideX;
+			this.model.position.z += collideY;
 		}
 
 		if(this.buildMode) {

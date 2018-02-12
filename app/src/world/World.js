@@ -69,16 +69,31 @@ class World {
 		positions.forEach((v) => {
 			this.structures[this.getPositionTag(v)] = object;
 
-			if(!this.chunk[this.getChunk(v)]) this.chunk[this.getChunk(v)] = {};
-			this.chunk[this.getChunk(v)][this.getPositionTag(v)] = object;
+			this.getChunksByAABB(object.aabb).forEach(chunk => {
+				if(!this.chunk[chunk]) this.chunk[chunk] = {};
+				this.chunk[chunk][this.getPositionTag(v)] = object;
+			});
 		});
 	}
 
-	getChunk({x, y}) {
-		return this.getPositionTag({
-			x: Math.floor(x * 40 / CHUNK_UNIT),
-			y: Math.floor(y * 40 / CHUNK_UNIT)
-		});
+	getChunksByAABB(aabb) {
+		const chunks = [];
+
+		for(
+			let x = Math.floor(aabb.min.x / CHUNK_UNIT);
+			x <= Math.floor(aabb.max.x / CHUNK_UNIT);
+			x++
+		) {
+			for(
+				let y = Math.floor(aabb.min.z / CHUNK_UNIT);
+				y <= Math.floor(aabb.max.z / CHUNK_UNIT);
+				y++
+			) {
+				chunks.push(`${x}:${y}`);
+			}
+		}
+
+		return chunks;
 	}
 
 	removeStructure(object) {
@@ -88,7 +103,10 @@ class World {
 		positions.forEach((v) => {
 			const {x, y} = v;
 			delete this.structures[this.getPositionTag(v)];
-			delete this.chunk[this.getChunk(v)][this.getPositionTag(v)];
+
+			this.getChunksByAABB(v.aabb).forEach(chunk => {
+				delete this.chunk[chunk][this.getPositionTag(v)];
+			});
 		});
 	}
 
