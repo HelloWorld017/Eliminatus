@@ -126,9 +126,10 @@ class EntityPlayer extends Entity {
 			const collidesObjects = this.checkCollisionInChunk();
 
 			collidesObjects.forEach((collidesObject, i) => {
+				const outputCenter = collidesObject.aabb.getCenter();
 				const outputTheta = Math.atan2(
-					collidesObject.z - revertPosition.z,
-					collidesObject.x - revertPosition.x
+					outputCenter.z - revertPosition.z,
+					outputCenter.x - revertPosition.x
 				);
 
 				 collideX -= Math.cos(outputTheta) * speed * 1.5;
@@ -143,6 +144,13 @@ class EntityPlayer extends Entity {
 				collideY = Math.sign(collideY) * Math.abs(yMovement);
 			}
 
+			if(Math.abs(xMovement * speedModifier + collideX) > Math.abs(xMovement)) {
+				collideX = 0;
+			}
+
+			if(Math.abs(yMovement * speedModifier + collideY) > Math.abs(yMovement)) {
+				collideY = 0;
+			}
 			this.model.position.x += collideX;
 			this.model.position.z += collideY;
 		}
