@@ -92,8 +92,8 @@ class CameraMovement {
 			if(v.type !== 'keyboard:keydown') return;
 
 			switch(v.key) {
-				case 'e': this.rotationTween.setTargetValue(this.rotationTween.target + 45); break;
-				case 'q': this.rotationTween.setTargetValue(this.rotationTween.target - 45); break;
+				case 'q': this.rotationTween.setTargetValue(this.rotationTween.target + 45); break;
+				case 'e': this.rotationTween.setTargetValue(this.rotationTween.target - 45); break;
 				case 'tab': this.toggleFollowCamera(); break;
 			}
 		});

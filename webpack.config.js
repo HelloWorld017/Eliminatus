@@ -63,7 +63,7 @@ module.exports = {
 				test: /\.(png|jpe?g|gif|svg|ttf|woff2?|eot|otf|wav|mp3|obj|mtl)$/,
 				loader: 'file-loader',
 				options: {
-					name: 'files/[name].[ext]?[hash]'
+					name: 'files/[path][name].[ext]?[hash]'
 				}
 			}
 		]

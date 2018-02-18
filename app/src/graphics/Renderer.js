@@ -16,7 +16,7 @@ import {
 } from "three";
 
 import loadPromise from "../utils/LoadPromise";
-import WorldTexture from "../../images/texture.png";
+import WorldTexture from "../../images/texture/terrain.png";
 import WindowResize from "../utils/WindowResize";
 
 class Renderer {

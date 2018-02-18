@@ -15,7 +15,7 @@ class AnimationPlayerPick extends Animation {
 	}
 
 	onUpdate(entity) {
-		if(this.tick < this.length / 2) {
+		if(this.tick <= this.length / 2) {
 			entity.model.position.x += Math.cos(this.theta) * 1;
 			entity.model.position.z += Math.sin(this.theta) * 1;
 		} else {

@@ -31,6 +31,8 @@ class Structure {
 		this.y = y;
 		this.z = z;
 
+		this.model.userData.eliminatusStructureData = this.getGridPosition()[0];
+
 		this.aabb = new Box3().setFromObject(this.model);
 
 		this.hpbar.model.position.set(

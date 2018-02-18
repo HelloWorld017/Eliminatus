@@ -100,12 +100,14 @@ class Eliminatus {
 		return structureObject;
 	}
 
-	updateEntityAttribute(data, entity) {
-		if(data.x) entity.model.position.x = data.x;
-		if(data.y) entity.model.position.y = data.y;
-		if(data.z) entity.model.position.z = data.z;
+	updateEntityAttribute(data, entity, updatePosition=true) {
+		if(updatePosition) {
+			if(data.x) entity.model.position.x = data.x;
+			if(data.y) entity.model.position.y = data.y;
+			if(data.z) entity.model.position.z = data.z;
 
-		if(data.rotation) entity.model.rotation.y = data.rotation;
+			if(data.rotation) entity.model.rotation.y = data.rotation;
+		}
 
 		if(data.health) entity.health = data.health;
 		if(data.tags) entity.importFromTag(data.tags);
@@ -119,15 +121,14 @@ class Eliminatus {
 
 	updateEntityAttributeByEID(data, updateSelf=false) {
 		if(data.type === 'player' && data.tags.uid === this.player.uid) {
-			if(!updateSelf) return;
-
 			data.id = -1;
 		}
+
 		const entity = this.world.entities.get(data.id);
 
 		if(!entity) return;
 
-		this.updateEntityAttribute(data, entity);
+		this.updateEntityAttribute(data, entity, updateSelf);
 	}
 
 	updateStructureByPosition(data) {

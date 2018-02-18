@@ -2,7 +2,7 @@
 
 A simple web-based multiplayer RTS game.
 
-## Implementations (42%)
+## Implementations (46%, 16/35)
  - Modeling Structures & Entities
  	- Structures
  		- [x] Modeling Resources
@@ -15,7 +15,6 @@ A simple web-based multiplayer RTS game.
 
  - Building Structures
  	- [x] Showing Placeholders
- 	- [x] Building Particles
 
  - [Game Server](https://github.com/HelloWorld017/EliminatusServer)
  	- [x] Login & Matchmaking
@@ -26,7 +25,7 @@ A simple web-based multiplayer RTS game.
  	- Working Structure & Entities
  		- Structures
  			- [ ] User structures
- 			- [ ] Picking resource structures
+ 			- [x] Picking resource structures
  		- Entities
  			- [ ] Basic Entity Movement
  			- [ ] Summoning Skills
@@ -42,16 +41,22 @@ A simple web-based multiplayer RTS game.
     	- [ ] Research UI
     	- [ ] Factory UI
 
+ - Effects
+ 	- [ ] Skill Effects
+ 	- [ ] Desturction Effects
+ 	- [x] Picking Effects
+ 	- [ ] Entity Effects
+ 	- [x] Building Effects
+
  - Collision Response and Physics
  	- [x] Basic Implementation
- 		- Currently Inaccurate
 
  - HUDs
     - [x] Minimap
     - [ ] Player Health Bar
     - [ ] Skills
     - [ ] Build Menu
-    - [ ] Inventory
+    - [x] Inventory
 
 - Etc
  	- [ ] Dedicated Client-side Server using WebRTC

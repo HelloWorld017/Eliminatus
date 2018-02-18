@@ -35,28 +35,7 @@ class Entity {
 	}
 
 	checkCollisionInChunk() {
-		let collidesStructure = [];
-
-		let checkedKey = {};
-		this.getChunks().forEach(chunkKey => {
-			if(this.world.chunk[chunkKey]) {
-				const foundObject = Object.keys(this.world.chunk[chunkKey]).filter(structureKey => {
-					if(checkedKey[this.world.structures[structureKey].uniqueId]) return;
-
-					if(this.world.chunk[chunkKey][structureKey].aabb.intersectsBox(this.aabb)) {
-						checkedKey[this.world.structures[structureKey].uniqueId] = true;
-						return true;
-					}
-
-					return false;
-				});
-
-				if(foundObject.length > 0)
-					collidesStructure.push(...foundObject.map(v => this.world.structures[v]));
-			}
-		});
-
-		return collidesStructure;
+		return this.getMergedChunkStructures().filter(structure => structure.aabb.intersectsBox(this.aabb));
 	}
 
 	getChunks() {
@@ -78,6 +57,24 @@ class Entity {
 		}
 
 		return chunks;
+	}
+
+	getMergedChunkStructures() {
+		const structures = [];
+		const checkedKey = {};
+
+		this.getChunks().forEach(chunkKey => {
+			if(this.world.chunk[chunkKey]) {
+				Object.keys(this.world.chunk[chunkKey]).forEach(structureKey => {
+					if(checkedKey[this.world.structures[structureKey].uniqueId]) return;
+
+					checkedKey[this.world.structures[structureKey].uniqueId] = true;
+					structures.push(this.world.structures[structureKey]);
+				});
+			}
+		});
+
+		return structures;
 	}
 
 	static async registerModel() {

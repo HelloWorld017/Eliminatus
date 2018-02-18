@@ -24,6 +24,7 @@ const store = new Vuex.Store({
 		maxHealth: 10,
 		buildMode: false,
 		buildingObject: undefined,
+		inventory: {},
 		followCamera: false
 	}
 });

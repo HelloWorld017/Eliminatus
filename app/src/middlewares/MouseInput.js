@@ -1,4 +1,4 @@
-import CursorImage from "../../images/cursor.png";
+import CursorImage from "../../images/ui/cursor.png";
 
 class MouseInput {
 	constructor() {

@@ -1,3 +1,4 @@
+import AnimationPlayerPick from "../animation/AnimationPlayerPick";
 import Entity from "./Entity";
 import PlayerModel from "../../models/entities/player.obj";
 import PlayerMaterial from "../../models/entities/player.mtl";
@@ -31,6 +32,7 @@ class EntityPlayer extends Entity {
 		]);
 
 		this.raycaster = new Raycaster;
+		this.playerRaycaster = new Raycaster;
 		this.mouse = new Vector2;
 		this.buildPoint = new Vector3;
 		this.buildRotation = 0;
@@ -38,6 +40,8 @@ class EntityPlayer extends Entity {
 		this.tempModelLoader = new TempModel(this.world.modelLoader);
 
 		this.inventory = {};
+		this.lastPick = 0;
+		this.pickInterval = 800;
 	}
 
 	cancelBuilding() {
@@ -61,6 +65,17 @@ class EntityPlayer extends Entity {
 			rotation: this.buildRotation
 		});
 		this.cancelBuilding();
+	}
+
+	importFromTag(tags) {
+		if(tags.inventory) {
+			this.inventory = tags.inventory;
+			this.game.store.state.inventory = tags.inventory;
+		}
+	}
+
+	updateRaycaster() {
+		this.playerRaycaster.set(this.model.position, this.model.getWorldDirection());
 	}
 
 	update(ctx) {
@@ -196,6 +211,40 @@ class EntityPlayer extends Entity {
 				} else {
 					this.tempModel.material.color.setHex(0x03a9f4);
 				}
+			}
+		}
+
+		if(ctx.keyboard.pressingKeys.get(' ')) {
+			if(Date.now() - this.lastPick >= this.pickInterval) {
+				this.updateRaycaster();
+
+				const intersects = this.playerRaycaster.intersectObjects(
+					this.getMergedChunkStructures().map(v => v.model), true
+				);
+
+				intersects.every(pickingObject => {
+					let pickingModel = pickingObject.object;
+
+					while(!pickingModel.userData.eliminatusStructureData) {
+						pickingModel = pickingModel.parent;
+
+						if(!pickingModel) return true;
+					}
+
+					const pickingAnimation = new AnimationPlayerPick({
+						targetPosition: pickingObject.point
+					});
+					this.attachAnimation(pickingAnimation);
+
+					console.log(pickingModel.userData.eliminatusStructureData);
+					this.game.socket.emit('game.structure.pick', {
+						x: pickingModel.userData.eliminatusStructureData.x,
+						z: pickingModel.userData.eliminatusStructureData.y,
+					});
+
+					this.lastPick = Date.now();
+					return false;
+				});
 			}
 		}
 

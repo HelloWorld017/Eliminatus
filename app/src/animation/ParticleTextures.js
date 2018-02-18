@@ -1,5 +1,5 @@
-import ParticleTexture from "../../images/particle.png";
-import PerlinTexture from "../../images/perlin.png";
+import ParticleTexture from "../../images/texture/particle.png";
+import PerlinTexture from "../../images/texture/perlin.png";
 import {TextureLoader} from "three";
 
 import loadPromise from "../utils/LoadPromise";
