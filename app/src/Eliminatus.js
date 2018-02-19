@@ -120,15 +120,18 @@ class Eliminatus {
 	}
 
 	updateEntityAttributeByEID(data, updateSelf=false) {
+		let isSelf = false;
+
 		if(data.type === 'player' && data.tags.uid === this.player.uid) {
 			data.id = -1;
+			isSelf = true;
 		}
 
 		const entity = this.world.entities.get(data.id);
 
 		if(!entity) return;
 
-		this.updateEntityAttribute(data, entity, updateSelf);
+		this.updateEntityAttribute(data, entity, !isSelf || updateSelf);
 	}
 
 	updateStructureByPosition(data) {

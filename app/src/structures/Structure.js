@@ -45,7 +45,7 @@ class Structure {
 	}
 
 	get uniqueId() {
-		return `${this.x}:${this.y}`;
+		return `${this.x}:${this.z}`;
 	}
 
 	attachAnimation(animation) {

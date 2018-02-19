@@ -1,5 +1,6 @@
 import AnimationPlayerPick from "../animation/AnimationPlayerPick";
 import Entity from "./Entity";
+import MathUtils from "../math/MathUtils";
 import PlayerModel from "../../models/entities/player.obj";
 import PlayerMaterial from "../../models/entities/player.mtl";
 import PlayerTexture from "../../models/entities/player.png";
@@ -7,7 +8,6 @@ import {Raycaster, Vector2, Vector3} from "three";
 import TempModel from "../utils/TempModel";
 
 const ENTITY_TYPE = "player";
-const modulo = (n, n2) => ((n % n2) + n2) % n2;
 
 class EntityPlayer extends Entity {
 	constructor(world, x, y, z) {
@@ -28,11 +28,10 @@ class EntityPlayer extends Entity {
 
 		this.keyMap = new Map([
 			['`', () => this.cancelBuilding()],
-			['r', () => this.buildRotation = modulo(this.buildRotation - Math.PI / 2, Math.PI * 2)]
+			['r', () => this.buildRotation = MathUtils.mod(this.buildRotation - Math.PI / 2, Math.PI * 2)]
 		]);
 
 		this.raycaster = new Raycaster;
-		this.playerRaycaster = new Raycaster;
 		this.mouse = new Vector2;
 		this.buildPoint = new Vector3;
 		this.buildRotation = 0;
@@ -72,10 +71,6 @@ class EntityPlayer extends Entity {
 			this.inventory = tags.inventory;
 			this.game.store.state.inventory = tags.inventory;
 		}
-	}
-
-	updateRaycaster() {
-		this.playerRaycaster.set(this.model.position, this.model.getWorldDirection());
 	}
 
 	update(ctx) {
@@ -216,30 +211,37 @@ class EntityPlayer extends Entity {
 
 		if(ctx.keyboard.pressingKeys.get(' ')) {
 			if(Date.now() - this.lastPick >= this.pickInterval) {
-				this.updateRaycaster();
+				const intersects = this.getMergedChunkStructures().reduce((prev, curr) => {
+					const deltaX = curr.x - this.model.position.x; // Because of boundmap
+					const deltaZ = curr.z - this.model.position.z;
 
-				const intersects = this.playerRaycaster.intersectObjects(
-					this.getMergedChunkStructures().map(v => v.model), true
-				);
+					const distance = Math.hypot(deltaX, deltaZ);
+					if(distance > 80) return prev;
 
-				intersects.every(pickingObject => {
-					let pickingModel = pickingObject.object;
+					const theta = Math.atan2(deltaZ, -deltaX);
+					let deltaTheta = MathUtils.mod(this.model.rotation.y - theta + Math.PI / 2, Math.PI * 2);
+					if(deltaTheta > Math.PI) deltaTheta = Math.PI * 2 - deltaTheta;
+					if(deltaTheta > Math.PI / 4) return prev;
 
-					while(!pickingModel.userData.eliminatusStructureData) {
-						pickingModel = pickingModel.parent;
+					prev.push([distance, curr]);
+					return prev;
+				}, []).sort((n1, n2) => n1[0] - n2[0]);
 
-						if(!pickingModel) return true;
-					}
+				intersects.every(([distance, pickingObject]) => {
+					const pickingGrid = pickingObject.getGridPosition()[0];
 
 					const pickingAnimation = new AnimationPlayerPick({
-						targetPosition: pickingObject.point
+						targetPosition: {
+							x: pickingObject.x,
+							z: pickingObject.z
+						}
 					});
+
 					this.attachAnimation(pickingAnimation);
 
-					console.log(pickingModel.userData.eliminatusStructureData);
 					this.game.socket.emit('game.structure.pick', {
-						x: pickingModel.userData.eliminatusStructureData.x,
-						z: pickingModel.userData.eliminatusStructureData.y,
+						x: pickingGrid.x,
+						z: pickingGrid.y
 					});
 
 					this.lastPick = Date.now();

@@ -1,4 +1,4 @@
-import Rotation from "../utils/Rotate";
+import Rotation from "../math/Rotation";
 
 class Minimap {
 	constructor(game) {

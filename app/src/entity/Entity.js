@@ -1,4 +1,6 @@
 import {Box3} from "three";
+import Collider from "../math/Collider";
+import OrientedBB from "../math/OrientedBB";
 
 const CHUNK_UNIT = 200;
 
@@ -17,6 +19,8 @@ class Entity {
 		this.animation = [];
 
 		this.aabb = new Box3();
+		this.obb = (new OrientedBB())
+			.setFromAABB((new Box3()).setFromObject(world.modelLoader.get(entityName)));
 	}
 
 	render() {
@@ -35,7 +39,19 @@ class Entity {
 	}
 
 	checkCollisionInChunk() {
-		return this.getMergedChunkStructures().filter(structure => structure.aabb.intersectsBox(this.aabb));
+		this.obb.updateFromModel(this.model);
+		const vertices = this.obb.getVertices();
+
+		return this.getMergedChunkStructures().filter(structure => Collider.testCollision(
+			[
+				{x: structure.aabb.min.x, y: structure.aabb.min.z},
+				{x: structure.aabb.min.x, y: structure.aabb.max.z},
+				{x: structure.aabb.max.x, y: structure.aabb.min.z},
+				{x: structure.aabb.max.x, y: structure.aabb.max.z}
+			],
+
+			vertices
+		));
 	}
 
 	getChunks() {

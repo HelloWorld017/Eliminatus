@@ -2,7 +2,7 @@
 
 A simple web-based multiplayer RTS game.
 
-## Implementations (46%, 16/35)
+## Implementations (49%, 17/35)
  - Modeling Structures & Entities
  	- Structures
  		- [x] Modeling Resources
@@ -34,7 +34,7 @@ A simple web-based multiplayer RTS game.
  			- [ ] Drones
 
  - In-game UI
- 	- [ ] Player Nametags
+ 	- [x] Player Nametags
  	- Structures UI
     	- [x] Structure Healthbar
     	- [ ] No transmitter sign
