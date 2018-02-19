@@ -147,6 +147,7 @@ class Eliminatus {
 	}
 
 	attachListeners() {
+		// World Generation
 		this.socket.on('world.structures', (structures) => {
 			structures.forEach(str => {
 				const structureObject = this.createStructureFromData(str);
@@ -168,18 +169,31 @@ class Eliminatus {
 			});
 		});
 
+		// World Update
 		this.socket.on('world.tick', ({entityUpdate, structureUpdate}) => {
 			entityUpdate.forEach(v => this.updateEntityAttributeByEID(v, false));
 			structureUpdate.forEach(v => this.updateStructureByPosition(v));
 		});
 
+		// Entities
 		this.socket.on('entity.attribute', v => this.updateEntityAttributeByEID(v, true));
+
+		// Structures
 		this.socket.on('structure.spawn', obj => {
 			const structureObject = this.createStructureFromData(obj.structure);
 			this.world.addStructure(structureObject);
 			obj.animate.forEach(v => {
 				structureObject.attachAnimation(this.createAnimationFromData(v));
 			});
+		});
+
+		this.socket.on('structure.remove', ({structurePosition, animate}) => {
+			const structureObject = this.world.structures[this.world.getPositionTag(structurePosition)];
+
+			animate.forEach(v => {
+				structureObject.attachAnimation(this.createAnimationFromData(v));
+			});
+			this.world.removeStructure(structureObject);
 		});
 	}
 }

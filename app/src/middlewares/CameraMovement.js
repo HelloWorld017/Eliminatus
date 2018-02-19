@@ -24,7 +24,7 @@ class CameraMovement {
 		this.buildGrid.position.y = 0.2;
 		this.buildGrid.position.z = this.world.height / 2;
 
-		this._followCamera = false;
+		this._followCamera = true;
 	}
 
 	resetCamera() {
@@ -62,19 +62,19 @@ class CameraMovement {
 		if(!this.world) this.init(world);
 
 		if(ctx.mouse.x < 30) {
-			this.x += 4.1 * this.sin;
-			this.z -= 4.1 * this.cos;
+			this.x += 7.1 * this.sin;
+			this.z -= 7.1 * this.cos;
 		} else if(ctx.mouse.x > window.innerWidth - 30) {
-			this.x -= 4.1 * this.sin;
-			this.z += 4.1 * this.cos;
+			this.x -= 7.1 * this.sin;
+			this.z += 7.1 * this.cos;
 		}
 
 		if(ctx.mouse.y < 30) {
-			this.x += 4.1 * this.cos;
-			this.z += 4.1 * this.sin;
+			this.x += 7.1 * this.cos;
+			this.z += 7.1 * this.sin;
 		} else if(ctx.mouse.y > window.innerHeight - 30) {
-			this.x -= 4.1 * this.cos;
-			this.z -= 4.1 * this.sin;
+			this.x -= 7.1 * this.cos;
+			this.z -= 7.1 * this.sin;
 		}
 
 		ctx.mouse.events.forEach((v) => {

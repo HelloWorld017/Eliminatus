@@ -2,7 +2,7 @@
 
 A simple web-based multiplayer RTS game.
 
-## Implementations (49%, 17/35)
+## Implementations (47%, 17/36)
  - Modeling Structures & Entities
  	- Structures
  		- [x] Modeling Resources
@@ -53,6 +53,7 @@ A simple web-based multiplayer RTS game.
 
  - HUDs
     - [x] Minimap
+ 		- [ ] Camera Integration
     - [ ] Player Health Bar
     - [ ] Skills
     - [ ] Build Menu

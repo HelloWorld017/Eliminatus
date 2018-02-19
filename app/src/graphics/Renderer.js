@@ -1,5 +1,6 @@
 import {
 	AmbientLight,
+	Clock,
 	DirectionalLight,
 	DoubleSide,
 	Fog,
@@ -16,6 +17,9 @@ import {
 } from "three";
 
 import loadPromise from "../utils/LoadPromise";
+
+import ParticleEmitter from "./GPUParticleSystem";
+import ParticleTextures from "./ParticleTextures";
 import WorldTexture from "../../images/texture/terrain.png";
 import WindowResize from "../utils/WindowResize";
 
@@ -32,6 +36,9 @@ class Renderer {
 		this.world = world;
 		this.windowResize = new WindowResize(this.renderer, this.camera);
 		this.terrain = new Object3D();
+
+		this.clock = new Clock;
+		this.tickCount = 0;
 	}
 
 	async init() {
@@ -66,10 +73,17 @@ class Renderer {
 		this.directionalLight.shadow.camera.near = 0.1;
 		this.directionalLight.shadow.camera.far = 1000;
 
+		this.emitter = new ParticleEmitter({
+			maxParticles: 100000,
+			particleNoiseTex: ParticleTextures.particle.perlin,
+			particleSpriteTex: ParticleTextures.particle.particle
+		});
+
 		this.scene.add(this.terrain);
 		this.scene.add(this.directionalLight);
 		this.scene.add(this.light);
 		this.scene.add(this.camera);
+		this.scene.add(this.emitter);
 
 		this.scene.fog = new Fog(0x404040, 10, 1500);
 
@@ -85,6 +99,10 @@ class Renderer {
 	}
 
 	tick() {
+		const delta = this.clock.getDelta();
+		this.tickCount += delta * 10;
+
+		this.emitter.update(this.tickCount);
 		this.renderer.render(this.scene, this.camera);
 	}
 }

@@ -25,7 +25,7 @@ class Animation {
 		this.tick++;
 
 		if(this.tick > this.length) {
-			this.onDestroy();
+			this.onDestroy(object, context);
 			return false;
 		}
 

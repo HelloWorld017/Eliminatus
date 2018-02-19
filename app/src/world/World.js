@@ -1,7 +1,7 @@
 import deepExtend from "deep-extend";
 import HealthBarRasterized from "../graphics/HealthBarRasterized";
 import ModelLoader from "../utils/ModelLoader";
-import ParticleTextures from "../animation/ParticleTextures";
+import ParticleTextures from "../graphics/ParticleTextures";
 import Renderer from "../graphics/Renderer";
 
 import animations from "../animation";
@@ -44,9 +44,9 @@ class World {
 		this.structureByType = await loadStructures(this.modelLoader);
 		this.animationsByType = animations;
 
-		await this.renderer.init();
 		await ParticleTextures.init();
 		await HealthBarRasterized.init();
+		await this.renderer.init();
 	}
 
 	spawnEntity(eid, entity) {
@@ -96,17 +96,19 @@ class World {
 		return chunks;
 	}
 
-	removeStructure(object) {
-		this.renderer.scene.remove(object.model);
+	removeStructure(object, removeModel=false) {
+		if(removeModel)
+			this.renderer.scene.remove(object.model);
 
 		const positions = object.getGridPosition();
-		positions.forEach((v) => {
-			const {x, y} = v;
-			delete this.structures[this.getPositionTag(v)];
+		const chunks = this.getChunksByAABB(object.aabb);
 
-			this.getChunksByAABB(v.aabb).forEach(chunk => {
-				delete this.chunk[chunk][this.getPositionTag(v)];
+		positions.forEach((v) => {
+			const tag = this.getPositionTag(v);
+			chunks.forEach(chunk => {
+				delete this.chunk[chunk][tag];
 			});
+			delete this.structures[tag];
 		});
 	}
 
