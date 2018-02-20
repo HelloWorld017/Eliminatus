@@ -1,5 +1,5 @@
 import Animation from "./Animation";
-import {Clock, Vector3} from "three";
+import {Vector3} from "three";
 
 class AnimationBuild extends Animation {
 	constructor({targetHealth}) {

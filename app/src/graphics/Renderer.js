@@ -6,22 +6,18 @@ import {
 	Fog,
 	Mesh,
 	MeshBasicMaterial,
-	NormalBlending,
 	Object3D,
 	PCFSoftShadowMap,
 	PerspectiveCamera,
 	PlaneGeometry,
 	RepeatWrapping,
 	Scene,
-	TextureLoader,
 	WebGLRenderer
 } from "three";
 
-import loadPromise from "../utils/LoadPromise";
 
 import ParticleEmitter from "./GPUParticleSystem";
-import ParticleTextures from "./ParticleTextures";
-import WorldTexture from "../../images/texture/terrain.png";
+import Textures from "./Textures";
 import WindowResize from "../utils/WindowResize";
 
 class Renderer {
@@ -48,7 +44,7 @@ class Renderer {
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = PCFSoftShadowMap;
 
-		const texture = await loadPromise(new TextureLoader, WorldTexture);
+		const texture = Textures.textures.terrain;
 		texture.wrapS = texture.wrapT = RepeatWrapping;
 
 		const repeat = Math.ceil(Math.max(this.world.width / 1024, this.world.height / 1024)) * 4;
@@ -76,22 +72,14 @@ class Renderer {
 
 		this.emitter = new ParticleEmitter({
 			maxParticles: 100000,
-			particleNoiseTex: ParticleTextures.particle.perlin,
-			particleSpriteTex: ParticleTextures.particle.particle
-		});
-
-		this.multiplyEmitter = new ParticleEmitter({
-			maxParticles: 100000,
-			particleNoiseTex: ParticleTextures.particle.perlin,
-			particleSpriteTex: ParticleTextures.particle.cloud,
-			blending: NormalBlending
+			particleNoiseTex: Textures.textures.perlin,
+			particleSpriteTex: Textures.textures.particle
 		});
 
 		this.scene.add(this.terrain);
 		this.scene.add(this.directionalLight);
 		this.scene.add(this.light);
 		this.scene.add(this.camera);
-		this.scene.add(this.multiplyEmitter);
 		this.scene.add(this.emitter);
 
 		this.scene.fog = new Fog(0x404040, 10, 1500);
@@ -112,7 +100,6 @@ class Renderer {
 		this.tickCount += delta * 10;
 
 		this.emitter.update(this.tickCount);
-		this.multiplyEmitter.update(this.tickCount);
 		this.renderer.render(this.scene, this.camera);
 	}
 }

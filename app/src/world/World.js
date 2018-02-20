@@ -1,7 +1,7 @@
 import deepExtend from "deep-extend";
 import HealthBarRasterized from "../graphics/HealthBarRasterized";
 import ModelLoader from "../utils/ModelLoader";
-import ParticleTextures from "../graphics/ParticleTextures";
+import Textures from "../graphics/Textures";
 import Renderer from "../graphics/Renderer";
 
 import animations from "../animation";
@@ -44,7 +44,7 @@ class World {
 		this.structureByType = await loadStructures(this.modelLoader);
 		this.animationsByType = animations;
 
-		await ParticleTextures.init();
+		await Textures.init();
 		await HealthBarRasterized.init();
 		await this.renderer.init();
 	}
