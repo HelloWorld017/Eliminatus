@@ -2,7 +2,7 @@
 
 A simple web-based multiplayer RTS game.
 
-## Implementations (47%, 17/36)
+## Implementations (50%, 18/36)
  - Modeling Structures & Entities
  	- Structures
  		- [x] Modeling Resources

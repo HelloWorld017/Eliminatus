@@ -46,7 +46,7 @@
 		position: fixed;
 		top: 50%;
 		width: 80px;
-		height: 200px;
+		height: 260px;
 		right: 0;
 		transform: translateY(-50%);
 		padding: 5px;
@@ -63,12 +63,12 @@
 			align-items: baseline;
 
 			width: 100%;
-			height: 60px;
+			height: 100px;
 
 			.inventory-image {
-				width: 50px;
-				height: 50px;
-				margin-right: -10px;
+				width: 80px;
+				height: 80px;
+				margin-right: -30px;
 			}
 
 			.inventory-amount {
