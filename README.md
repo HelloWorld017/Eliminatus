@@ -43,7 +43,7 @@ A simple web-based multiplayer RTS game.
 
  - Effects
  	- [ ] Skill Effects
- 	- [ ] Desturction Effects
+ 	- [x] Desturction Effects
  	- [x] Picking Effects
  	- [ ] Entity Effects
  	- [x] Building Effects

@@ -1,3 +1,4 @@
+import CloudTexture from "../../images/texture/cloud.png";
 import ParticleTexture from "../../images/texture/particle.png";
 import PerlinTexture from "../../images/texture/perlin.png";
 import {TextureLoader} from "three";
@@ -9,7 +10,8 @@ export default class ParticleTextures {
 	static async init() {
 		this.particle = {
 			perlin: await loadPromise(new TextureLoader, PerlinTexture),
-			particle: await loadPromise(new TextureLoader, ParticleTexture)
+			particle: await loadPromise(new TextureLoader, ParticleTexture),
+			cloud: await loadPromise(new TextureLoader, CloudTexture)
 		}
 	};
 };

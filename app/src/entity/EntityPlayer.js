@@ -212,8 +212,8 @@ class EntityPlayer extends Entity {
 		if(ctx.keyboard.pressingKeys.get(' ')) {
 			if(Date.now() - this.lastPick >= this.pickInterval) {
 				const intersects = this.getMergedChunkStructures().reduce((prev, curr) => {
-					const deltaX = curr.x - this.model.position.x; // Because of boundmap
-					const deltaZ = curr.z - this.model.position.z;
+					const deltaX = curr.model.position.x - this.model.position.x; // Because of boundmap
+					const deltaZ = curr.model.position.z - this.model.position.z;
 
 					const distance = Math.hypot(deltaX, deltaZ);
 					if(distance > 80) return prev;
