@@ -16,6 +16,13 @@ class StructureRotatedWall extends Structure{
 			RotatedWallTexture
 		);
 	}
+
+	static get ingredients() {
+		return {
+			cytrium: 50,
+			stone: 40
+		};
+	}
 }
 
 StructureRotatedWall.type = "wall_rot";

@@ -9,7 +9,7 @@ class StructureRepairCore extends Structure{
 	constructor(world, x, y, z) {
 		super(StructureRepairCore.type, world, x, y, z);
 	}
-	
+
 	get hpBarPosition() {
 		return {
 			x: 0,
@@ -25,6 +25,14 @@ class StructureRepairCore extends Structure{
 			RepairCoreMaterial,
 			RepairCoreTexture
 		);
+	}
+
+	static get ingredients() {
+		return {
+			cytrium: 400,
+			stone: 75,
+			wood: 30
+		};
 	}
 
 	static get positioningMethod() {

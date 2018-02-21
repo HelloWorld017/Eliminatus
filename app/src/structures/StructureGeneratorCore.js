@@ -19,6 +19,13 @@ class StructureGeneratorCore extends Structure{
 		);
 	}
 
+	static get ingredients() {
+		return {
+			cytrium: 300,
+			stone: 50
+		};
+	}
+
 	static get positioningMethod() {
 		return Math.round;
 	}

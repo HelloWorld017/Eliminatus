@@ -18,6 +18,14 @@ class StructureFactoryCore extends Structure{
 		);
 	}
 
+	static get ingredients() {
+		return {
+			cytrium: 300,
+			stone: 10,
+			wood: 30
+		};
+	};
+
 	static get positioningMethod() {
 		return Math.round;
 	}

@@ -23,6 +23,13 @@ class StructureTransmitterCore extends Structure{
 		if(rot === Math.PI / 2) return {x: 17, y: 0, z: 20};
 		return {x: 20, y: 0, z: 17};
 	}
+
+	static get ingredients() {
+		return {
+			cytrium: 100,
+			stone: 50
+		};
+	}
 }
 
 StructureTransmitterCore.type = "transmitter_core";

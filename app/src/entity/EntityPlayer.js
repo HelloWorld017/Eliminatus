@@ -1,10 +1,11 @@
 import AnimationPlayerPick from "../animation/AnimationPlayerPick";
+import {CSS3DSprite} from "../graphics/CSS3D";
 import Entity from "./Entity";
 import MathUtils from "../math/MathUtils";
 import PlayerModel from "../../models/entities/player.obj";
 import PlayerMaterial from "../../models/entities/player.mtl";
 import PlayerTexture from "../../models/entities/player.png";
-import {Raycaster, Vector2, Vector3} from "three";
+import {MeshBasicMaterial, Raycaster, Vector2, Vector3} from "three";
 import TempModel from "../utils/TempModel";
 
 const ENTITY_TYPE = "player";
@@ -12,6 +13,11 @@ const ENTITY_TYPE = "player";
 class EntityPlayer extends Entity {
 	constructor(world, x, y, z) {
 		super(ENTITY_TYPE, world, x, y, z);
+
+		this.removeMode = false;
+		this.removeMaterial = new MeshBasicMaterial({color: 0xef5350, transparent: true, opacity: .6});
+		this.previousModel = null;
+		this.previousMaterial = null;
 
 		this.buildMode = false;
 		this.buildKeymap = new Map([
@@ -28,7 +34,8 @@ class EntityPlayer extends Entity {
 
 		this.keyMap = new Map([
 			['`', () => this.cancelBuilding()],
-			['r', () => this.buildRotation = MathUtils.mod(this.buildRotation - Math.PI / 2, Math.PI * 2)]
+			['r', () => this.buildRotation = MathUtils.mod(this.buildRotation - Math.PI / 2, Math.PI * 2)],
+			['-', () => this.startRemoveMode()]
 		]);
 
 		this.raycaster = new Raycaster;
@@ -38,16 +45,29 @@ class EntityPlayer extends Entity {
 		this.tempModel = undefined;
 		this.tempModelLoader = new TempModel(this.world.modelLoader);
 
+		this.ingredientsView = new CSS3DSprite(document.querySelector('#ingredient-ui'));
+		this.ingredientsView.scale.set(0.4, 0.4, 0.4);
+
 		this.inventory = {};
 		this.lastPick = 0;
 		this.pickInterval = 800;
 	}
 
+	cancelRemoving() {
+		if(!this.removeMode) return;
+		if(this.previousModel && this.world.structures[this.previousModel]) {
+			this.world.structures[this.previousModel].structModel.material = this.previousMaterial;
+		}
+		this.removeMode = false;
+	}
+
 	cancelBuilding() {
+		if(this.removeMode) this.cancelRemoving();
 		if(!this.buildMode) return;
 
 		this.buildMode = false;
 		this.world.renderer.scene.remove(this.tempModel);
+		this.world.renderer.sceneSpriteHtml.remove(this.ingredientsView);
 	}
 
 	confirmBuilding() {
@@ -64,6 +84,11 @@ class EntityPlayer extends Entity {
 			rotation: this.buildRotation
 		});
 		this.cancelBuilding();
+	}
+
+	startRemoveMode() {
+		this.cancelBuilding();
+		this.removeMode = true;
 	}
 
 	importFromTag(tags) {
@@ -99,9 +124,20 @@ class EntityPlayer extends Entity {
 			}
 
 			if(this.buildKeymap.get(key) !== undefined) {
-				if(this.buildMode) this.cancelBuilding();
+				if(this.buildMode || this.removeMode) this.cancelBuilding();
 				this.buildMode = this.buildKeymap.get(key);
 				this.tempModel = this.tempModelLoader.get(this.buildMode);
+
+				const structureIngredients = this.world.structureByType[this.buildMode].ingredients;
+
+				this.game.store.state.ingredients = Object.keys(structureIngredients).map(k => {
+					return {
+						name: k,
+						needed: structureIngredients[k]
+					};
+				});
+
+				this.world.renderer.sceneSpriteHtml.add(this.ingredientsView);
 				this.world.renderer.scene.add(this.tempModel);
 
 				this.buildPoint = this.model.position.clone();
@@ -189,6 +225,8 @@ class EntityPlayer extends Entity {
 				point.y = 0;
 				point.z = gridifyFunction(point.z / 40) * 40;
 
+				this.ingredientsView.position.copy((new Vector3()).copy(point).add(new Vector3(50, 80, 0)));
+
 				this.buildPoint = point;
 				this.tempModel.position.x = point.x - boundMap.x;
 				this.tempModel.position.y = point.y - boundMap.y;
@@ -206,6 +244,40 @@ class EntityPlayer extends Entity {
 				} else {
 					this.tempModel.material.color.setHex(0x03a9f4);
 				}
+			}
+		} else if (this.removeMode) {
+			this.mouse.x = ctx.mouse.x / window.innerWidth * 2 - 1;
+			this.mouse.y = ctx.mouse.y / window.innerHeight * -2 + 1;
+
+			this.raycaster.setFromCamera(this.mouse, this.world.renderer.camera);
+
+			const intersects = this.raycaster.intersectObjects(
+				this.getMergedChunkStructures().map(v => v.structModel), true
+			);
+
+			if(intersects.length > 0) {
+				const {object} = intersects.shift();
+				if(object.userData.eliminatusStructureData) {
+					const tag = this.world.getPositionTag(object.userData.eliminatusStructureData);
+
+					if(this.previousModel !== tag) {
+						if(this.previousModel && this.world.structures[this.previousModel]) {
+							this.world.structures[this.previousModel].structModel.material = this.previousMaterial;
+						}
+
+						this.previousModel = tag;
+						this.previousMaterial = this.world.structures[tag].structModel.material;
+
+						this.world.structures[tag].structModel.material = this.removeMaterial;
+					}
+				}
+
+			} else if (this.previousModel) {
+				if(this.world.structures[this.previousModel]) {
+					this.world.structures[this.previousModel].structModel.material = this.previousMaterial;
+				}
+				this.previousModel = null;
+				this.previousMaterial = null;
 			}
 		}
 

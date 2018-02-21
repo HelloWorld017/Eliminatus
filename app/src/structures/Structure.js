@@ -31,7 +31,9 @@ class Structure {
 		this.y = y;
 		this.z = z;
 
-		this.model.userData.eliminatusStructureData = this.getGridPosition()[0];
+		this.structModel.userData.eliminatusStructureData =
+			this.model.userData.eliminatusStructureData =
+			this.getGridPosition()[0];
 
 		this.aabb = new Box3().setFromObject(this.model);
 

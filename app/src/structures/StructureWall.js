@@ -11,6 +11,13 @@ class StructureWall extends Structure{
 	static async registerModel(loader) {
 		return loader.load(StructureWall.type, WallModel, WallMaterial, WallTexture);
 	}
+
+	static get ingredients() {
+		return {
+			cytrium: 50,
+			stone: 40
+		};
+	}
 }
 
 StructureWall.type = "wall";

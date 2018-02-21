@@ -29,6 +29,14 @@ class StructureEngineeringCore extends Structure{
 		return Math.round;
 	}
 
+	static get ingredients() {
+		return {
+			cytrium: 700,
+			stone: 50,
+			wood: 30
+		};
+	}
+
 	static getBoundMap(rot) {
 		return {x: 0, y: 0, z: 0};
 	}

@@ -32,6 +32,13 @@ class StructureTurret extends Structure{
 		if(rot === Math.PI / 2) return {x: 0, y: 0, z: 20};
 		return {x: 20, y: 0, z: 0};
 	}
+
+	static get ingredients() {
+		return {
+			cytrium: 400,
+			stone: 60
+		};
+	}
 }
 
 StructureTurret.type = "turret";

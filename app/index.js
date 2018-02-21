@@ -2,6 +2,7 @@ import "./css/index.css";
 
 import App from "./App.vue";
 import Eliminatus from "./src/Eliminatus";
+import IngredientUI from "./components/ElIngredients.vue";
 import io from "socket.io-client";
 import Ripple from 'vue-ripple-directive';
 import Vue from "vue";
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
 		buildMode: false,
 		buildingObject: undefined,
 		inventory: {},
+		ingredients: [],
 		followCamera: false
 	}
 });
@@ -32,6 +34,12 @@ const store = new Vuex.Store({
 new Vue({
 	el: "#ui",
 	render: h => h(App),
+	store
+});
+
+new Vue({
+	el: "#ingredients",
+	render: h => h(IngredientUI),
 	store
 });
 

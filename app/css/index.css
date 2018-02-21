@@ -4,13 +4,14 @@ body, html {
 	margin: 0;
 	padding: 0;
 	background: #f1f2f3;
+	overflow: hidden;
 }
 
 #game {
 	display: flex;
 }
 
-#hud {
+#hud, #hud-html {
 	position: fixed;
 	top: 0;
 	left: 0;

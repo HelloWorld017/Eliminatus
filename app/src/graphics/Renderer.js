@@ -15,6 +15,8 @@ import {
 	WebGLRenderer
 } from "three";
 
+import {CSS3DRenderer} from "./CSS3D";
+
 
 import ParticleEmitter from "./GPUParticleSystem";
 import Textures from "./Textures";
@@ -25,14 +27,18 @@ class Renderer {
 		this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 		this.light = new AmbientLight(0xeeeeee, .4);
 		this.directionalLight = new DirectionalLight(0xffffff, .9);
-		this.scene = new Scene();
-		this.terrain = new Object3D();
+		this.scene = new Scene;
+		this.sceneSpriteHtml = new Scene;
+		this.sceneSprite = new Scene;
+		this.terrain = new Object3D;
 
 		this.playerModel = null;
 		this.renderer = new WebGLRenderer({antialias: true});
+		this.htmlRenderer = new CSS3DRenderer;
 		this.world = world;
 		this.windowResize = new WindowResize(this.renderer, this.camera);
-		this.terrain = new Object3D();
+		this.windowHtmlResize = new WindowResize(this.htmlRenderer, this.camera);
+		this.terrain = new Object3D;
 
 		this.clock = new Clock;
 		this.tickCount = 0;
@@ -43,6 +49,8 @@ class Renderer {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = PCFSoftShadowMap;
+
+		this.htmlRenderer.setSize(window.innerWidth, window.innerHeight);
 
 		const texture = Textures.textures.terrain;
 		texture.wrapS = texture.wrapT = RepeatWrapping;
@@ -85,6 +93,7 @@ class Renderer {
 		this.scene.fog = new Fog(0x404040, 10, 1500);
 
 		document.querySelector('#game').appendChild(this.renderer.domElement);
+		document.querySelector('#hud-html').appendChild(this.htmlRenderer.domElement);
 	}
 
 	bind(model) {
@@ -101,6 +110,7 @@ class Renderer {
 
 		this.emitter.update(this.tickCount);
 		this.renderer.render(this.scene, this.camera);
+		this.htmlRenderer.render(this.sceneSpriteHtml, this.camera);
 	}
 }
 

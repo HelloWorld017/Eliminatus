@@ -10,6 +10,14 @@ class StructureExtractorCore extends Structure{
 		super(StructureExtractorCore.type, world, x, y, z);
 	}
 
+	static get ingredients() {
+		return {
+			cytrium: 70,
+			stone: 10,
+			wood: 10
+		};
+	}
+	
 	static async registerModel(loader) {
 		return loader.load(
 			StructureExtractorCore.type, ExtractorCoreModel,

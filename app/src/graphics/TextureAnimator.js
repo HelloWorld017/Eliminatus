@@ -32,7 +32,6 @@ class TextureAnimator {
 		const row = Math.floor(this.currentTile / this.horizontalAmount);
 
 		this.texture.offset.set(column / this.xSize, 1 - row / this.ySize);
-		console.log(this.texture.offset.x, this.texture.offset.y);
 	}
 }
 
