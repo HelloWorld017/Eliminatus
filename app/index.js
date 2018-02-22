@@ -27,6 +27,7 @@ const store = new Vuex.Store({
 		buildingObject: undefined,
 		inventory: {},
 		ingredients: [],
+		inavailReasons: [],
 		followCamera: false
 	}
 });

@@ -17,12 +17,23 @@ class StructureExtractorCore extends Structure{
 			wood: 10
 		};
 	}
-	
+
 	static async registerModel(loader) {
 		return loader.load(
 			StructureExtractorCore.type, ExtractorCoreModel,
 			ExtractorCoreMaterial, ExtractorCoreTexture
 		);
+	}
+
+	static canBuiltOn(world, x, y, z, rotation) {
+		return this.getGridPositionByAttr(x, y, z, rotation).every((v) => {
+			return world.structures[world.getPositionTag(v)] &&
+				world.structures[world.getPositionTag(v)].type === 'ore';
+		});
+	}
+
+	static getInavailReasons(world, x, y, z, rotation) {
+		return ["Should be installed on top of ore!"];
 	}
 }
 

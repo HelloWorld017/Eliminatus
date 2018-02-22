@@ -24,6 +24,10 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="notice column" v-for="reason in inavailReasons">
+			<i class="mdi mdi-alert-outline">{{reason}}</i>
+		</div>
 	</section>
 </template>
 
@@ -129,6 +133,10 @@
 
 			ingredients() {
 				return this.$store.state.ingredients;
+			},
+
+			inavailReasons() {
+				return this.$store.state.inavailReasons;
 			},
 
 			fulfill() {
