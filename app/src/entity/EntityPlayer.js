@@ -46,7 +46,7 @@ class EntityPlayer extends Entity {
 		this.tempModelLoader = new TempModel(this.world.modelLoader);
 
 		this.ingredientsView = new CSS3DSprite(document.querySelector('#ingredient-ui'));
-		this.ingredientsView.scale.set(0.4, 0.4, 0.4);
+		this.ingredientsView.scale.set(0.35, 0.35, 1);
 
 		this.inventory = {};
 		this.lastPick = 0;
@@ -210,6 +210,7 @@ class EntityPlayer extends Entity {
 			const intersects = this.raycaster.intersectObjects(this.world.renderer.terrain.children, true);
 
 			if(intersects.length > 0) {
+				const structType = this.world.structureByType[this.buildMode];
 				const point = intersects.pop().point;
 				const myModel = this.model.position;
 
@@ -219,8 +220,8 @@ class EntityPlayer extends Entity {
 					point.z = myModel.z + Math.sin(theta) * 200;
 				}
 
-				const boundMap = this.world.structureByType[this.buildMode].getBoundMap(this.buildRotation);
-				const gridifyFunction = this.world.structureByType[this.buildMode].positioningMethod;
+				const boundMap = structType.getBoundMap(this.buildRotation);
+				const gridifyFunction = structType.positioningMethod;
 				point.x = gridifyFunction(point.x / 40) * 40;
 				point.y = 0;
 				point.z = gridifyFunction(point.z / 40) * 40;
@@ -233,13 +234,27 @@ class EntityPlayer extends Entity {
 				this.tempModel.position.z = point.z - boundMap.z;
 				this.tempModel.rotation.y = this.buildRotation;
 
-				if(!this.world.structureByType[this.buildMode].canBuiltOn(
+				const args = [
 					this.world,
 					point.x,
 					0,
 					point.z,
 					this.buildRotation
-				)) {
+				];
+
+				let buildable = structType.canBuiltOn(...args);
+				let reason = [];
+
+				if(!buildable) reason.push(...structType.getInavailReasons(...args));
+
+				if(!Object.keys(structType.ingredients).every(v => structType.ingredients[v] <= this.inventory[v])) {
+					buildable = false;
+					reason.push('Insufficient Resources!');
+				}
+
+				this.game.store.state.buildInavailReasons = reason;
+
+				if(!buildable) {
 					this.tempModel.material.color.setHex(0xff5722);
 				} else {
 					this.tempModel.material.color.setHex(0x03a9f4);

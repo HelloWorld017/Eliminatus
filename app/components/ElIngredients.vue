@@ -10,6 +10,7 @@
 			<div class="column-right">
 			</div>
 		</header>
+
 		<div class="item column" v-for="ingredient in ingredients">
 			<div class="column-left">
 				<img :src="inventory[ingredient.name]" class="item-icon">
@@ -26,8 +27,12 @@
 		</div>
 
 		<div class="notice column" v-for="reason in inavailReasons">
-			<i class="mdi mdi-alert-outline">{{reason}}</i>
+			<i class="mdi mdi-alert-outline"></i>
+			<div class="contents">
+				{{reason}}
+			</div>
 		</div>
+
 	</section>
 </template>
 
@@ -42,6 +47,19 @@
 			display: flex;
 			height: 60px;
 			margin-bottom: 25px;
+
+			&.notice {
+				background: #f44336;
+				color: #fff;
+				padding: 8px 20px;
+				border-radius: 5px;
+				align-items: center;
+
+				.contents {
+					margin: 20px;
+					font-style: italic;
+				}
+			}
 
 			&.item:nth-child(3n) {
 				margin-left: 35px;
@@ -136,7 +154,7 @@
 			},
 
 			inavailReasons() {
-				return this.$store.state.inavailReasons;
+				return this.$store.state.buildInavailReasons;
 			},
 
 			fulfill() {

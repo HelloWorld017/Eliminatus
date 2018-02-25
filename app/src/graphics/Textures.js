@@ -1,4 +1,5 @@
 import ExplosionTexture from "../../images/texture/explosion.png";
+import NoAntennaTexture from "../../images/ui/no-antenna.png";
 import ParticleTexture from "../../images/texture/particle.png";
 import PerlinTexture from "../../images/texture/perlin.png";
 import TerrainTexture from "../../images/texture/terrain.png";
@@ -12,7 +13,8 @@ export default class Textures {
 			explosion: await loadPromise(new TextureLoader, ExplosionTexture),
 			particle: await loadPromise(new TextureLoader, ParticleTexture),
 			perlin: await loadPromise(new TextureLoader, PerlinTexture),
-			terrain: await loadPromise(new TextureLoader, TerrainTexture)
+			terrain: await loadPromise(new TextureLoader, TerrainTexture),
+			no_antenna: await loadPromise(new TextureLoader, NoAntennaTexture)
 		}
 	};
 };

@@ -20,7 +20,7 @@ class StructureRotatedWall extends Structure{
 	static get ingredients() {
 		return {
 			cytrium: 50,
-			stone: 40
+			stone: 5
 		};
 	}
 }

@@ -55,6 +55,8 @@ class Structure {
 		animation.onAttach(this);
 	}
 
+	importFromTag(tags) {}
+
 	update(ctx) {
 		this.animation.forEach(v => v.update(this, ctx));
 	}
@@ -134,6 +136,10 @@ class Structure {
 		return this.getGridPositionByAttr(x, y, z, rotation).every((v) => {
 			return !world.structures[world.getPositionTag(v)];
 		});
+	}
+
+	static getInavailReasons(world, x, y, z, rotation) {
+		return ["Intersects object!"];
 	}
 
 	static get width() {

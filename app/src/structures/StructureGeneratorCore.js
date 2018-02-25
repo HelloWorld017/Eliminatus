@@ -22,7 +22,7 @@ class StructureGeneratorCore extends Structure{
 	static get ingredients() {
 		return {
 			cytrium: 300,
-			stone: 50
+			stone: 30
 		};
 	}
 

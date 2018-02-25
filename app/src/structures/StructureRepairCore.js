@@ -30,7 +30,7 @@ class StructureRepairCore extends Structure{
 	static get ingredients() {
 		return {
 			cytrium: 400,
-			stone: 75,
+			stone: 30,
 			wood: 30
 		};
 	}

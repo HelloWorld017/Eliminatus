@@ -117,6 +117,7 @@ class Eliminatus {
 		if(data.maxHealth) structure.maxHealth = data.maxHealth;
 		if(data.health) structure.health = data.health;
 		if(data.rotation) structure.rotation = data.rotation;
+		if(data.tags) structure.importFromTag(data.tags);
 	}
 
 	updateEntityAttributeByEID(data, updateSelf=false) {

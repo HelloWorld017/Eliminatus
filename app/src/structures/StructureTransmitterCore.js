@@ -27,7 +27,7 @@ class StructureTransmitterCore extends Structure{
 	static get ingredients() {
 		return {
 			cytrium: 100,
-			stone: 50
+			stone: 5
 		};
 	}
 }

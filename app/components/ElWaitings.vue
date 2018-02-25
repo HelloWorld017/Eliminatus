@@ -1,17 +1,19 @@
 <template>
 	<section class="el-waitings">
 		<transition name="fade-slide" mode="out-in">
-			<div class="sect" v-if="!name" key="login">
-				<h2>Login</h2>
-				<form class="input-name" @submit="use">
-					<div class="input-hint">
-						<input type="text" placeholder="Username" ref="input"
-							id="username" @keyup="verify" maxlength="10">
-						<label for="username"></label>
-					</div>
+			<div class="sect login" v-if="!name" key="login">
+				<div class="login-wrap">
+					<h2>Login</h2>
+					<form class="input-name" @submit="use">
+						<div class="input-hint">
+							<input type="text" placeholder="Username" ref="input"
+								id="username" @keyup="verify" maxlength="10">
+							<label for="username"></label>
+						</div>
 
-					<button v-ripple="'rgba(255, 255, 255, 0.35)'">Use</button>
-				</form>
+						<button v-ripple="'rgba(255, 255, 255, 0.35)'">Use</button>
+					</form>
+				</div>
 			</div>
 
 			<div class="sect" v-else-if="!party" key="select">
@@ -125,6 +127,11 @@
 		flex-direction: column;
 		opacity: 1;
 		transform: none;
+
+		&.login {
+			justify-content: center;
+			align-items: center;
+		}
 	}
 
 	.search-input {
