@@ -2,6 +2,9 @@
 
 A simple web-based multiplayer RTS game.
 
+## In-Game Video
+[![Eliminatus Ingame](https://img.youtube.com/vi/BuhzWsKcl9o/maxresdefault.jpg)](https://www.youtube.com/watch?v=BuhzWsKcl9o)
+
 ## Implementations (51%, 19/37)
  - Modeling Structures & Entities
  	- Structures
@@ -53,7 +56,7 @@ A simple web-based multiplayer RTS game.
 
  - HUDs
     - [x] Minimap
- 		- [ ] Camera Integration
+ 		 - [ ] Camera Integration
     - [ ] Player Health Bar
     - [ ] Skills
     - [ ] Build Menu
