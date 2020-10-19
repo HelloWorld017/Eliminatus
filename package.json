@@ -47,7 +47,7 @@
     "file-loader": "^1.1.6",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
-    "object-path": "^0.11.4",
+    "object-path": "^0.11.5",
     "postcss": "^6.0.17",
     "postcss-cssnext": "^3.1.0",
     "postcss-loader": "^2.1.0",
